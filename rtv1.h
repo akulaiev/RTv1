@@ -75,11 +75,18 @@ typedef	struct	s_cam
 typedef	struct	s_sph
 {
 	t_dot	centre;
-	t_dot	normal;
 	int		radius;
 	t_col	col;
 	t_col	constant_col;
 }				t_sph;
+
+typedef	struct	s_pln
+{
+	t_dot	centre;
+	t_dot	normal;
+	t_col	col;
+	t_col	constant_col;
+}				t_pln;
 
 typedef struct	s_data
 {
