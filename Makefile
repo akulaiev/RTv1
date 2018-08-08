@@ -21,7 +21,8 @@ LIBFT_PATH = ./libft/
 MLX = ./minilibx_macos/libmlx.a
 MLX_PATH = ./minilibx_macos/
 
-SOURCE = main.c vector_operations.c vector_manipulate.c mlx_manipulations.c
+SOURCE = main.c vector_operations.c vector_manipulate.c mlx_manipulations.c \
+shapes.c
 
 O_FILES = $(SOURCE:.c=.o)
 
