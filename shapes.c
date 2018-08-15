@@ -22,6 +22,21 @@ void	double_swap(double a, double b)
 	b = temp;
 }
 
+void	get_its_params(t_fig fig, t_ray ray, t_intersection *its)
+{
+	its->ray_point = vector_add(ray.origin, vector_mult(ray.vect, its->t));
+	if (!fig.normal.x && !fig.normal.y && !fig.normal.z)
+	{
+		its->normal = vector_divide(vector_add(its->ray_point,
+		vector_mult(fig.centre, -1)), fig.radius);
+		normalize(&its->normal);
+	}
+	else
+		its->normal = fig.normal;
+	fig.col = lambert_shading(&fig.constant_col, its);
+	its->col = fig.col.integer;
+}
+
 int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
 {
 	double			p1;
@@ -48,12 +63,7 @@ int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
 				return (0);
 		}
 		its->t = its->t0; 
-		its->ray_point = vector_add(ray.origin, vector_mult(ray.vect, its->t));
-		its->normal = vector_divide(vector_add(its->ray_point,
-		vector_mult(sphere->centre, -1)), sphere->radius);
-		normalize(&its->normal);
-		sphere->col = lambert_shading(&sphere->constant_col, its);
-		its->col = sphere->col.integer;
+		get_its_params(*sphere, ray, its);
 		return (1);
 	}
 }
@@ -70,10 +80,7 @@ int		plane_intersection(t_fig *plane, t_ray ray, t_intersection *its)
 		its->t = vector_scalar(diff, plane->normal) / denom;
 		if (its->t > 0.0001)
 		{
-			its->normal = plane->normal;
-			its->ray_point = vector_add(ray.origin, vector_mult(ray.vect, its->t));
-			plane->col = lambert_shading(&plane->constant_col, its);
-			its->col = plane->col.integer;
+			get_its_params(*plane, ray, its);
 			return (1);
 		}
 	}
