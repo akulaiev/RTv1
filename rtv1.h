@@ -75,21 +75,14 @@ typedef	struct	s_cam
 	t_base	basis;
 }				t_cam;
 
-typedef	struct	s_sph
+typedef	struct	s_fig
 {
 	t_dot	centre;
 	int		radius;
-	t_col	col;
-	t_col	constant_col;
-}				t_sph;
-
-typedef	struct	s_pln
-{
-	t_dot	centre;
 	t_dot	normal;
 	t_col	col;
 	t_col	constant_col;
-}				t_pln;
+}				t_fig;
 
 typedef struct	s_data
 {
@@ -116,7 +109,7 @@ typedef struct	s_iter
 typedef	struct s_shape
 {
 	void 		*data;
-	int 		(*f)(void *shape_type,
+	int 		(*f)(t_fig *shape_type,
 	t_ray ray, t_intersection *its);
 }				t_shape;
 
@@ -138,8 +131,8 @@ void		normalize(t_dot *ray);
 t_base		get_basis(t_dot vect);
 int			key_react(int keycode, void *param);
 void		open_win(t_data *win);
-int			sphere_intersection(void *shape_type, t_ray ray, t_intersection *its);
-int			plane_intersection(void *shape_type, t_ray ray, t_intersection *its);
+int			sphere_intersection(t_fig *shape_type, t_ray ray, t_intersection *its);
+int			plane_intersection(t_fig *shape_type, t_ray ray, t_intersection *its);
 t_col		lambert_shading(t_col *constant_col, t_intersection *its);
 void		img_pixel_put(t_data *win, int x, int y, int col);
 void		deal_with_threads(t_data *win, t_cam camera, t_shape *shapes);

@@ -22,14 +22,12 @@ void	double_swap(double a, double b)
 	b = temp;
 }
 
-int		sphere_intersection(void *shape_type, t_ray ray, t_intersection *its)
+int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
 {
 	double			p1;
 	double			p2;
 	t_dot			e_min_c;
-	t_sph			*sphere;
 
-	sphere = (t_sph*)shape_type;
 	e_min_c = vector_add(ray.origin, vector_mult(sphere->centre, -1));
 	p1 = vector_scalar(ray.vect, e_min_c);
 	p1 *= p1;
@@ -60,13 +58,11 @@ int		sphere_intersection(void *shape_type, t_ray ray, t_intersection *its)
 	}
 }
 
-int		plane_intersection(void *shape_type, t_ray ray, t_intersection *its)
+int		plane_intersection(t_fig *plane, t_ray ray, t_intersection *its)
 {
 	double			denom;
 	t_dot			diff;
-	t_pln			*plane;
 
-	plane = (t_pln*)shape_type;
 	denom = vector_scalar(plane->normal, ray.vect);
 	if (fabs(denom) > 0.0001)
 	{

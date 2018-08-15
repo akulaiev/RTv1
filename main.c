@@ -33,13 +33,13 @@ t_col	lambert_shading(t_col *constant_col, t_intersection *its)
 	return (col);
 }
 
-void	calculate_ray(t_iter *it, t_ray *ray, t_thread *t)
+void	calculate_ray(t_iter it, t_ray *ray, t_thread *t)
 {
-	it->x_norm = (((it->x + 0.5) / t->win->ww) * 2 - 1) * t->win->ww / t->win->wh;
-	it->y_norm = ((it->y + 0.5) / t->win->wh) * 2 - 1;
+	it.x_norm = (((it.x + 0.5) / t->win->ww) * 2 - 1) * t->win->ww / t->win->wh;
+	it.y_norm = ((it.y + 0.5) / t->win->wh) * 2 - 1;
 	ray->vect = vector_add(t->camera.basis.dir_vect, 
-	vector_add(vector_mult(t->camera.basis.up_vect, it->y_norm),
-	vector_mult(t->camera.basis.right_vect, it->x_norm)));
+	vector_add(vector_mult(t->camera.basis.up_vect, it.y_norm),
+	vector_mult(t->camera.basis.right_vect, it.x_norm)));
 	normalize(&ray->vect);
 	ray->origin = t->camera.origin;
 }
@@ -59,7 +59,7 @@ void	*create_ray(void *w)
 		it.x = -1;
 		while (++it.x < t->win->ww)
 		{
-			calculate_ray(&it, &ray, t);
+			calculate_ray(it, &ray, t);
 			i = -1;
 			while (++i < 3)
 			{
@@ -75,9 +75,9 @@ int		main(void)
 {
 	t_data		data;
 	t_cam		camera;
-	t_sph		sphere;
-	t_pln		plane;
-	t_sph		sphere1;
+	t_fig		sphere;
+	t_fig		plane;
+	t_fig		sphere1;
 	t_shape		shapes[3];
 
 
