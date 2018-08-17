@@ -12,7 +12,7 @@
 
 #ifndef RTV1_H
 # define RTV1_H
-# define NUM_TH 19
+# define NUM_TH 17
 
 # include <stdlib.h>
 # include <fcntl.h>
