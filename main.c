@@ -54,6 +54,7 @@ void	*create_ray(void *w)
 
 	t = (t_thread*)w;
 	it.y = t->current_y;
+	its.closest_t = 0;
 	while (++it.y < t->win->wh)
 	{
 		it.x = -1;
@@ -64,7 +65,9 @@ void	*create_ray(void *w)
 			while (++i < 3)
 			{
 				if (t->shapes[i].f(t->shapes[i].data, ray, &its))
+				{
 					img_pixel_put(t->win, it.x, it.y, its.col);
+				}
 			}
 		}
 	}

@@ -51,15 +51,26 @@ typedef struct	s_ray
 	t_dot	origin;
 }				t_ray;
 
+typedef	struct	s_fig
+{
+	t_dot	centre;
+	int		radius;
+	t_dot	normal;
+	t_col	col;
+	t_col	constant_col;
+}				t_fig;
+
 typedef struct	s_intersection
 {
 	double	t;
 	double	t0;
 	double	t1;
+	double	closest_t;
 	double	d;
 	t_dot	normal;
 	t_dot	ray_point;
 	int		col;
+	t_fig	closest_shape;
 }				t_intersection;
 
 typedef struct	s_base
@@ -74,15 +85,6 @@ typedef	struct	s_cam
 	t_dot	origin;
 	t_base	basis;
 }				t_cam;
-
-typedef	struct	s_fig
-{
-	t_dot	centre;
-	int		radius;
-	t_dot	normal;
-	t_col	col;
-	t_col	constant_col;
-}				t_fig;
 
 typedef struct	s_data
 {
@@ -137,5 +139,7 @@ t_col		lambert_shading(t_col *constant_col, t_intersection *its);
 void		img_pixel_put(t_data *win, int x, int y, int col);
 void		deal_with_threads(t_data *win, t_cam camera, t_shape *shapes);
 void		*create_ray(void *w);
+
+t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its);
 
 #endif
