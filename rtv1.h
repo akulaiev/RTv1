@@ -141,5 +141,6 @@ void		deal_with_threads(t_data *win, t_cam camera, t_shape *shapes);
 void		*create_ray(void *w);
 
 t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its);
+int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its);
 
 #endif

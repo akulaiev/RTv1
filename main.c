@@ -48,27 +48,19 @@ void	*create_ray(void *w)
 {
 	t_iter			it;
 	t_ray			ray;
-	t_intersection	its;
 	t_thread		*t;
-	int 			i;
+	t_intersection	its;
 
 	t = (t_thread*)w;
 	it.y = t->current_y;
-	its.closest_t = 0;
 	while (++it.y < t->win->wh)
 	{
 		it.x = -1;
 		while (++it.x < t->win->ww)
 		{
 			calculate_ray(it, &ray, t);
-			i = -1;
-			while (++i < 3)
-			{
-				if (t->shapes[i].f(t->shapes[i].data, ray, &its))
-				{
-					img_pixel_put(t->win, it.x, it.y, its.col);
-				}
-			}
+			if (get_closest_shape(t, ray, &its))
+				img_pixel_put(t->win, it.x, it.y, its.col);
 		}
 	}
 	pthread_exit(NULL);
