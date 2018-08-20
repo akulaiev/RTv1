@@ -22,7 +22,7 @@ void	double_swap(double a, double b)
 	b = temp;
 }
 
-void	get_its_params(t_fig fig, t_ray ray, t_intersection *its)
+t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its)
 {
 	its->ray_point = vector_add(ray.origin, vector_mult(ray.vect, its->t));
 	if (!fig.normal.x && !fig.normal.y && !fig.normal.z)
@@ -33,8 +33,25 @@ void	get_its_params(t_fig fig, t_ray ray, t_intersection *its)
 	}
 	else
 		its->normal = fig.normal;
-	fig.col = lambert_shading(&fig.constant_col, its);
-	its->col = fig.col.integer;
+	return (lambert_shading(&fig.constant_col, its));
+}
+
+int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
+{
+	int		i;
+
+	i = -1;
+	its->closest_t = INFINITY;
+	while (++i < 3)
+	{
+		if (t->shapes[i].f(t->shapes[i].data, ray, its) && its->t < its->closest_t)
+		{
+			its->col = get_its_params((*(t_fig*)t->shapes[i].data), ray, its).integer;
+			its->closest_t = its->t;
+			return (1);
+		}
+	}
+	return (0);
 }
 
 int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
@@ -62,8 +79,7 @@ int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
 			if (its->t0 < 0)
 				return (0);
 		}
-		its->t = its->t0; 
-		get_its_params(*sphere, ray, its);
+		its->t = its->t0;
 		return (1);
 	}
 }
@@ -79,10 +95,7 @@ int		plane_intersection(t_fig *plane, t_ray ray, t_intersection *its)
 		diff = vector_add(plane->centre, vector_mult(ray.origin, -1));
 		its->t = vector_scalar(diff, plane->normal) / denom;
 		if (its->t > 0.0001)
-		{
-			get_its_params(*plane, ray, its);
 			return (1);
-		}
 	}
 	return (0);
 }
