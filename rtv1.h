@@ -54,7 +54,7 @@ typedef struct	s_ray
 typedef	struct	s_fig
 {
 	t_dot	centre;
-	int		radius;
+	double	radius;
 	t_dot	normal;
 	t_col	col;
 	t_col	constant_col;
@@ -69,8 +69,6 @@ typedef struct	s_intersection
 	double	d;
 	t_dot	normal;
 	t_dot	ray_point;
-	int		col;
-	t_fig	closest_shape;
 }				t_intersection;
 
 typedef struct	s_base

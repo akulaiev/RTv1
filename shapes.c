@@ -13,15 +13,6 @@
 #include "rtv1.h"
 #include <stdio.h>
 
-void	double_swap(double a, double b)
-{
-	double temp;
-
-	temp = a;
-	a = b;
-	b = temp;
-}
-
 t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its)
 {
 	its->ray_point = vector_add(ray.origin, vector_mult(ray.vect, its->t));
@@ -39,19 +30,19 @@ t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its)
 int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
 {
 	int		i;
+	int		col;
 
 	i = -1;
 	its->closest_t = INFINITY;
-	while (++i < 3)
+	while (++i < 4)
 	{
 		if (t->shapes[i].f(t->shapes[i].data, ray, its) && its->t < its->closest_t)
 		{
-			its->col = get_its_params((*(t_fig*)t->shapes[i].data), ray, its).integer;
+			col = get_its_params((*(t_fig*)t->shapes[i].data), ray, its).integer;
 			its->closest_t = its->t;
-			return (1);
 		}
 	}
-	return (0);
+	return (col);
 }
 
 int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
@@ -71,15 +62,14 @@ int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
 	{
 		its->t0 = vector_scalar(vector_mult(ray.vect, -1), e_min_c) + sqrt(its->d);
 		its->t1 = vector_scalar(vector_mult(ray.vect, -1), e_min_c) - sqrt(its->d);
-		if (its->t0 > its->t1)
-			double_swap(its->t0, its->t1);
-		if (its->t0 < 0) 
-		{ 
-			its->t0 = its->t1;
-			if (its->t0 < 0)
-				return (0);
-		}
-		its->t = its->t0;
+		if (its->t0 < 0)
+			its->t = its->t0;
+		if (its->t1 < 0)
+			its->t = its->t0;
+		if (its->t0 > 0 && its->t1 > 0 && its->t0 < its->t1)
+			its->t = its->t0;
+		if (its->t0 > 0 && its->t1 > 0 && its->t1 < its->t0)
+			its->t = its->t1;
 		return (1);
 	}
 }

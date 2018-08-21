@@ -59,8 +59,8 @@ void	*create_ray(void *w)
 		while (++it.x < t->win->ww)
 		{
 			calculate_ray(it, &ray, t);
-			if (get_closest_shape(t, ray, &its))
-				img_pixel_put(t->win, it.x, it.y, its.col);
+			img_pixel_put(t->win, it.x, it.y,
+			get_closest_shape(t, ray, &its));
 		}
 	}
 	pthread_exit(NULL);
@@ -73,7 +73,8 @@ int		main(void)
 	t_fig		sphere;
 	t_fig		plane;
 	t_fig		sphere1;
-	t_shape		shapes[3];
+	t_fig		sphere2;
+	t_shape		shapes[4];
 
 
 	data.ww = 950;
@@ -89,16 +90,22 @@ int		main(void)
 	camera.basis = get_basis(camera.basis.dir_vect);
 
 	sphere.centre.x = 0;
-	sphere.centre.y = 0;
+	sphere.centre.y = -1;
 	sphere.centre.z = 5;
 	sphere.radius = 1;
 	sphere.constant_col.integer = 0xff00c7;
 
 	sphere1.centre.x = -3;
-	sphere1.centre.y = 0;
+	sphere1.centre.y = -1;
 	sphere1.centre.z = 5;
 	sphere1.radius = 1;
 	sphere1.constant_col.integer = 0x42f4f1;
+
+	sphere2.centre.x = -2;
+	sphere2.centre.y = -1;
+	sphere2.centre.z = 7;
+	sphere2.radius = 1;
+	sphere2.constant_col.integer = 0xf4d142;
 
 	plane.centre.x = 0;
 	plane.centre.y = -5;
@@ -114,6 +121,8 @@ int		main(void)
 	shapes[1].f = &sphere_intersection;
 	shapes[2].data = &plane;
 	shapes[2].f = &plane_intersection;
+	shapes[3].data = &sphere2;
+	shapes[3].f = &sphere_intersection;
 
 	open_win(&data);
 	deal_with_threads(&data, camera, shapes);
