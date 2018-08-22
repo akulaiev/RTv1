@@ -13,7 +13,7 @@
 #include "rtv1.h"
 #include <stdio.h>
 
-t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its)
+t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t)
 {
 	its->ray_point = vector_add(ray.origin, vector_mult(ray.vect, its->t));
 	if (!fig.normal.x && !fig.normal.y && !fig.normal.z)
@@ -24,7 +24,8 @@ t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its)
 	}
 	else
 		its->normal = fig.normal;
-	return (lambert_shading(&fig.constant_col, its));
+	return (blinn_phong_shading(&fig.constant_col, its, t));
+	// return (lambert_shading(&fig.constant_col, its));
 }
 
 int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
@@ -38,7 +39,7 @@ int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
 	{
 		if (t->shapes[i].f(t->shapes[i].data, ray, its) && its->t < its->closest_t)
 		{
-			col = get_its_params((*(t_fig*)t->shapes[i].data), ray, its).integer;
+			col = get_its_params((*(t_fig*)t->shapes[i].data), ray, its, t).integer;
 			its->closest_t = its->t;
 		}
 	}

@@ -138,7 +138,8 @@ void		img_pixel_put(t_data *win, int x, int y, int col);
 void		deal_with_threads(t_data *win, t_cam camera, t_shape *shapes);
 void		*create_ray(void *w);
 
-t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its);
+t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t);
 int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its);
+t_col	blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t);
 
 #endif
