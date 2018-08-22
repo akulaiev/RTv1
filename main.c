@@ -36,6 +36,7 @@
 t_col	blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t)
 {	
 	t_dot	light;
+	t_dot	light1;
 	t_dot	l_vect;
 	t_dot	v_vect;
 	t_dot	h_vect;
@@ -43,21 +44,28 @@ t_col	blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t)
 	t_col	grey;
 
 	grey.integer = 0xa3a3a3;
-	light.x = 10;
+	light.x = -3;
 	light.y = 10;
 	light.z = 5;
+	light1.x = 3;
+	light1.y = 10;
+	light1.z = -5;
 	l_vect = vector_add(light, vector_mult(its->ray_point, -1));
 	normalize(&l_vect);
+	t_dot l_vect1 = vector_add(light1, vector_mult(its->ray_point, -1));
+	normalize(&l_vect1);
 	v_vect = vector_add(t->camera.origin, vector_mult(its->ray_point, -1));
 	normalize(&v_vect);
 	h_vect = vector_add(l_vect, v_vect);
 	normalize(&h_vect);
-	col.struct_col.r = fmin(0xFF, (constant_col->struct_col.r * fmax(0, vector_scalar(its->normal, l_vect)) +
-	grey.struct_col.r * fmax(0, pow(vector_scalar(its->normal, h_vect), 100))));
-	col.struct_col.g = fmin(0xFF, (constant_col->struct_col.g * fmax(0, vector_scalar(its->normal, l_vect)) +
-	grey.struct_col.g * fmax(0, pow(vector_scalar(its->normal, h_vect), 100))));
-	col.struct_col.b = fmin(0xFF, (constant_col->struct_col.b * fmax(0, vector_scalar(its->normal, l_vect)) +
-	grey.struct_col.b * fmax(0, pow(vector_scalar(its->normal, h_vect), 100))));
+	t_dot h_vect1 = vector_add(l_vect1, v_vect);
+	normalize(&h_vect1);
+	col.struct_col.r = fmin(0xFF, (constant_col->struct_col.r * fmax(0, vector_scalar(its->normal, l_vect)) + grey.struct_col.r * fmax(0, pow(vector_scalar(its->normal, h_vect), 100))) + 
+	(constant_col->struct_col.r * fmax(0, vector_scalar(its->normal, l_vect1)) + grey.struct_col.r * fmax(0, pow(vector_scalar(its->normal, h_vect1), 100))));
+	col.struct_col.g = fmin(0xFF, (constant_col->struct_col.g * fmax(0, vector_scalar(its->normal, l_vect)) + grey.struct_col.g * fmax(0, pow(vector_scalar(its->normal, h_vect), 100))) + 
+	(constant_col->struct_col.g * fmax(0, vector_scalar(its->normal, l_vect1)) + grey.struct_col.g * fmax(0, pow(vector_scalar(its->normal, h_vect1), 100))));
+	col.struct_col.b = fmin(0xFF, (constant_col->struct_col.b * fmax(0, vector_scalar(its->normal, l_vect)) + grey.struct_col.b * fmax(0, pow(vector_scalar(its->normal, h_vect), 100))) + 
+	(constant_col->struct_col.b * fmax(0, vector_scalar(its->normal, l_vect1)) + grey.struct_col.b * fmax(0, pow(vector_scalar(its->normal, h_vect1), 100))));
 	return (col);
 }
 
