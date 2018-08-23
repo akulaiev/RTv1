@@ -31,7 +31,7 @@ void	open_win(t_data *win)
 	mlx_hook(win->mlx_nw, 2, 5, key_react, (void*)win);
 }
 
-void		deal_with_threads(t_data *win, t_cam camera, t_shape *shapes)
+void		deal_with_threads(t_data *win, t_cam camera, t_shape *shapes, t_light l)
 {
 	int			j;
 	int			iter;
@@ -47,6 +47,7 @@ void		deal_with_threads(t_data *win, t_cam camera, t_shape *shapes)
 		w[iter].win = win;
 		w[iter].camera = camera;
 		w[iter].shapes = shapes;
+		w[iter].lights = l;
 		j += win->lines_per_th;
 	}
 	iter = -1;

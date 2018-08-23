@@ -25,7 +25,6 @@ t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t)
 	else
 		its->normal = fig.normal;
 	return (blinn_phong_shading(&fig.constant_col, its, t));
-	// return (lambert_shading(&fig.constant_col, its));
 }
 
 int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
@@ -63,10 +62,8 @@ int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
 	{
 		its->t0 = vector_scalar(vector_mult(ray.vect, -1), e_min_c) + sqrt(its->d);
 		its->t1 = vector_scalar(vector_mult(ray.vect, -1), e_min_c) - sqrt(its->d);
-		if (its->t0 < 0)
-			its->t = its->t0;
-		if (its->t1 < 0)
-			its->t = its->t0;
+		its->t0 < 0 ? (its->t = its->t0) : 0;
+		its->t1 < 0 ? (its->t = its->t0) : 0;
 		if (its->t0 > 0 && its->t1 > 0 && its->t0 < its->t1)
 			its->t = its->t0;
 		if (its->t0 > 0 && its->t1 > 0 && its->t1 < its->t0)

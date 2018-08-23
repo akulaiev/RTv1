@@ -12,7 +12,7 @@
 
 #ifndef RTV1_H
 # define RTV1_H
-# define NUM_TH 17
+# define NUM_TH 5
 
 # include <stdlib.h>
 # include <fcntl.h>
@@ -84,6 +84,12 @@ typedef	struct	s_cam
 	t_base	basis;
 }				t_cam;
 
+typedef	struct	s_light
+{
+	t_dot	lts[3];
+	int		num_l;
+}				t_light;
+
 typedef struct	s_data
 {
 	void	*mlx_p;
@@ -119,7 +125,22 @@ typedef struct	s_thread
 	t_data	*win;
 	t_cam 	camera;
 	t_shape *shapes;
+	t_light	lights;
 }				t_thread;
+
+typedef struct	s_shd
+{
+	t_dot	l_vect[3];
+	t_dot	v_vect;
+	t_dot	h_vect[3];
+	t_col	col;
+	int		i;
+	double	nl;
+	double	hl;
+	int		tmp_r;
+	int		tmp_g;
+	int		tmp_b;
+}				t_shd;
 
 int			key_react(int keycode, void *param);
 t_dot		vector_add(t_dot first, t_dot second);
@@ -135,7 +156,7 @@ int			sphere_intersection(t_fig *shape_type, t_ray ray, t_intersection *its);
 int			plane_intersection(t_fig *shape_type, t_ray ray, t_intersection *its);
 t_col		lambert_shading(t_col *constant_col, t_intersection *its);
 void		img_pixel_put(t_data *win, int x, int y, int col);
-void		deal_with_threads(t_data *win, t_cam camera, t_shape *shapes);
+void		deal_with_threads(t_data *win, t_cam camera, t_shape *shapes, t_light l);
 void		*create_ray(void *w);
 
 t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t);

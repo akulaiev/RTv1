@@ -31,7 +31,7 @@ HEADER = -I ./RTv1.h
 all: LIBS $(NAME) 
 
 $(NAME): $(O_FILES)
-	$(CC) -lpthread $(MLX) -framework OpenGL -framework AppKit $(CFLAGS) -o $(NAME) $(O_FILES) $(LIBFT)
+	$(CC) $(MLX) -framework OpenGL -framework AppKit $(CFLAGS) -o $(NAME) $(O_FILES) $(LIBFT)
 
 LIBS:
 	make -C $(MLX_PATH)

@@ -13,60 +13,32 @@
 #include "rtv1.h"
 #include <stdio.h>
 
-// t_col	lambert_shading(t_col *constant_col, t_intersection *its)
-// {
-// 	t_dot	light;
-// 	t_dot	l_vect;
-// 	t_col	col;
-
-// 	light.x = 10;
-// 	light.y = 10;
-// 	light.z = 5;
-// 	l_vect = vector_add(light, vector_mult(its->ray_point, -1));
-// 	normalize(&l_vect);
-// 	col.struct_col.r = constant_col->struct_col.r * 
-// 	fmax(0, vector_scalar(its->normal, l_vect));
-// 	col.struct_col.g = constant_col->struct_col.g * 
-// 	fmax(0, vector_scalar(its->normal, l_vect));
-// 	col.struct_col.b = constant_col->struct_col.b * 
-// 	fmax(0, vector_scalar(its->normal, l_vect));
-// 	return (col);
-// }
-
 t_col	blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t)
-{	
-	t_dot	light;
-	t_dot	light1;
-	t_dot	l_vect;
-	t_dot	v_vect;
-	t_dot	h_vect;
-	t_col	col;
-	t_col	grey;
+{
+	t_shd	s;
 
-	grey.integer = 0xa3a3a3;
-	light.x = -3;
-	light.y = 10;
-	light.z = 5;
-	light1.x = 3;
-	light1.y = 10;
-	light1.z = -5;
-	l_vect = vector_add(light, vector_mult(its->ray_point, -1));
-	normalize(&l_vect);
-	t_dot l_vect1 = vector_add(light1, vector_mult(its->ray_point, -1));
-	normalize(&l_vect1);
-	v_vect = vector_add(t->camera.origin, vector_mult(its->ray_point, -1));
-	normalize(&v_vect);
-	h_vect = vector_add(l_vect, v_vect);
-	normalize(&h_vect);
-	t_dot h_vect1 = vector_add(l_vect1, v_vect);
-	normalize(&h_vect1);
-	col.struct_col.r = fmin(0xFF, (constant_col->struct_col.r * fmax(0, vector_scalar(its->normal, l_vect)) + grey.struct_col.r * fmax(0, pow(vector_scalar(its->normal, h_vect), 100))) + 
-	(constant_col->struct_col.r * fmax(0, vector_scalar(its->normal, l_vect1)) + grey.struct_col.r * fmax(0, pow(vector_scalar(its->normal, h_vect1), 100))));
-	col.struct_col.g = fmin(0xFF, (constant_col->struct_col.g * fmax(0, vector_scalar(its->normal, l_vect)) + grey.struct_col.g * fmax(0, pow(vector_scalar(its->normal, h_vect), 100))) + 
-	(constant_col->struct_col.g * fmax(0, vector_scalar(its->normal, l_vect1)) + grey.struct_col.g * fmax(0, pow(vector_scalar(its->normal, h_vect1), 100))));
-	col.struct_col.b = fmin(0xFF, (constant_col->struct_col.b * fmax(0, vector_scalar(its->normal, l_vect)) + grey.struct_col.b * fmax(0, pow(vector_scalar(its->normal, h_vect), 100))) + 
-	(constant_col->struct_col.b * fmax(0, vector_scalar(its->normal, l_vect1)) + grey.struct_col.b * fmax(0, pow(vector_scalar(its->normal, h_vect1), 100))));
-	return (col);
+	s.tmp_r = 0;
+	s.tmp_g = 0;
+	s.tmp_b = 0;
+	s.i = -1;
+	s.v_vect = vector_add(t->camera.origin, vector_mult(its->ray_point, -1));
+		normalize(&s.v_vect);
+	while (++s.i < t->lights.num_l)
+	{
+		s.l_vect[s.i] = vector_add(t->lights.lts[s.i], vector_mult(its->ray_point, -1));
+		normalize(&s.l_vect[s.i]);
+		s.h_vect[s.i] = vector_add(s.l_vect[s.i], s.v_vect);
+		normalize(&s.h_vect[s.i]);
+		s.nl = fmax(0, vector_scalar(its->normal, s.l_vect[s.i]));
+		s.hl = fmax(0, pow(vector_scalar(its->normal, s.h_vect[s.i]), 100));
+		s.tmp_r += constant_col->struct_col.r * s.nl + 131 * s.hl;
+		s.tmp_g += constant_col->struct_col.g * s.nl + 131 * s.hl;
+		s.tmp_b += constant_col->struct_col.b * s.nl + 131 * s.hl;
+	}
+	s.tmp_r > 0xFF ? (s.col.struct_col.r = 0xFF) : (s.col.struct_col.r = s.tmp_r);
+	s.tmp_g > 0xFF ? (s.col.struct_col.g = 0xFF) : (s.col.struct_col.g = s.tmp_g);
+	s.tmp_b > 0xFF ? (s.col.struct_col.b = 0xFF) : (s.col.struct_col.b = s.tmp_b);
+	return (s.col);
 }
 
 void	calculate_ray(t_iter it, t_ray *ray, t_thread *t)
@@ -111,6 +83,7 @@ int		main(void)
 	t_fig		sphere1;
 	t_fig		sphere2;
 	t_shape		shapes[4];
+	t_light		l;
 
 
 	data.ww = 950;
@@ -124,6 +97,17 @@ int		main(void)
 	camera.basis.dir_vect.z = 1;
 	normalize(&camera.basis.dir_vect);
 	camera.basis = get_basis(camera.basis.dir_vect);
+
+	l.lts[0].x = -3;
+	l.lts[0].y = 10;
+	l.lts[0].z = 5;
+	l.lts[1].x = 3;
+	l.lts[1].y = 10;
+	l.lts[1].z = -5;
+	l.lts[2].x = 1;
+	l.lts[2].y = -1;
+	l.lts[2].z = 1;
+	l.num_l = 3;
 
 	sphere.centre.x = 0;
 	sphere.centre.y = -1;
@@ -161,7 +145,7 @@ int		main(void)
 	shapes[3].f = &sphere_intersection;
 
 	open_win(&data);
-	deal_with_threads(&data, camera, shapes);
+	deal_with_threads(&data, camera, shapes, l);
 	mlx_put_image_to_window(data.mlx_p, data.mlx_nw, data.mlx_img, 0, 0);
 	mlx_loop(data.mlx_p);
 }
