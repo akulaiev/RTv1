@@ -34,7 +34,7 @@ int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
 
 	i = -1;
 	its->closest_t = INFINITY;
-	while (++i < 4)
+	while (++i < 5)
 	{
 		if (t->shapes[i].f(t->shapes[i].data, ray, its) && its->t < its->closest_t)
 		{
@@ -43,6 +43,44 @@ int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
 		}
 	}
 	return (col);
+}
+
+int		cylinder_intersection(t_fig *cylinder, t_ray ray, t_intersection *its)
+{
+	t_dot	tmp;
+	double	a;
+	double	b;
+	double	c;
+	t_dot	va;
+	t_dot	delta_p;
+
+	delta_p = vector_add(ray.origin, vector_mult(cylinder->first_end, -1));
+	normalize(&delta_p);
+	va = vector_add(cylinder->second_end, vector_mult(cylinder->first_end, -1));
+	normalize(&va);
+
+	tmp = vector_add(ray.vect, vector_mult(vector_mult(va, vector_scalar(ray.vect, va)), -1));
+	a = vector_scalar(tmp, tmp);
+	b = 2 * vector_scalar(tmp, vector_add(delta_p,
+	vector_mult(vector_mult(va, vector_scalar(delta_p, va)), -1)));
+	tmp = vector_add(delta_p, vector_mult(vector_mult(va, vector_scalar(delta_p, va)), -1));
+	c = vector_scalar(tmp, tmp) - pow(cylinder->radius, 2);
+	
+	its->d = pow(b, 2) - 4 * a * c;
+	if (its->d < 0)
+		return (0);
+	else
+	{
+		its->t0 = (-b + sqrt(its->d)) / 2 * a;
+		its->t1 = (-b - sqrt(its->d)) / 2 * a;
+		its->t0 < 0 ? (its->t = its->t0) : 0;
+		its->t1 < 0 ? (its->t = its->t0) : 0;
+		if (its->t0 > 0 && its->t1 > 0 && its->t0 < its->t1)
+			its->t = its->t0;
+		if (its->t0 > 0 && its->t1 > 0 && its->t1 < its->t0)
+			its->t = its->t1;
+		return (1);
+	}
 }
 
 int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)

@@ -82,8 +82,9 @@ int		main(void)
 	t_fig		plane;
 	t_fig		sphere1;
 	t_fig		sphere2;
-	t_shape		shapes[4];
+	t_shape		shapes[5];
 	t_light		l;
+	t_fig		cylinder;
 
 
 	data.ww = 950;
@@ -135,6 +136,15 @@ int		main(void)
 	plane.normal.z = 0;
 	plane.constant_col.integer = 0xcccecc;
 
+	cylinder.first_end.x = 2;
+	cylinder.first_end.y = 0;
+	cylinder.first_end.z = 1;
+	cylinder.second_end.x = 2.5;
+	cylinder.second_end.y = 0.5;
+	cylinder.second_end.z = 1.5;
+	cylinder.radius = 0.7;
+	cylinder.constant_col.integer = 0xadf442;
+
 	shapes[0].data = &sphere;
 	shapes[0].f = &sphere_intersection;
 	shapes[1].data = &sphere1;
@@ -143,6 +153,8 @@ int		main(void)
 	shapes[2].f = &plane_intersection;
 	shapes[3].data = &sphere2;
 	shapes[3].f = &sphere_intersection;
+	shapes[4].data = &cylinder;
+	shapes[4].f = &cylinder_intersection;
 
 	open_win(&data);
 	deal_with_threads(&data, camera, shapes, l);

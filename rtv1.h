@@ -56,7 +56,9 @@ typedef	struct	s_fig
 	t_dot	centre;
 	double	radius;
 	t_dot	normal;
-	t_col	col;
+	t_dot	first_end;
+	t_dot	second_end;
+	// t_col	col;
 	t_col	constant_col;
 }				t_fig;
 
@@ -162,5 +164,5 @@ void		*create_ray(void *w);
 t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t);
 int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its);
 t_col	blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t);
-
+int		cylinder_intersection(t_fig *cylinder, t_ray ray, t_intersection *its);
 #endif
