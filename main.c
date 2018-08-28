@@ -136,13 +136,13 @@ int		main(void)
 	plane.normal.z = 0;
 	plane.constant_col.integer = 0xcccecc;
 
-	cylinder.first_end.x = 2;
-	cylinder.first_end.y = 0;
-	cylinder.first_end.z = 1;
-	cylinder.second_end.x = 2.5;
-	cylinder.second_end.y = 0.5;
-	cylinder.second_end.z = 1.5;
-	cylinder.radius = 0.7;
+	cylinder.pa.x = 0;
+	cylinder.pa.y = 0;
+	cylinder.pa.z = 0;
+	cylinder.va.x = 0;
+	cylinder.va.y = 0;
+	cylinder.va.z = 1;
+	cylinder.radius = 1;
 	cylinder.constant_col.integer = 0xadf442;
 
 	shapes[0].data = &sphere;

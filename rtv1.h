@@ -56,10 +56,9 @@ typedef	struct	s_fig
 	t_dot	centre;
 	double	radius;
 	t_dot	normal;
-	t_dot	first_end;
-	t_dot	second_end;
-	// t_col	col;
 	t_col	constant_col;
+	t_dot	va;
+	t_dot	pa;
 }				t_fig;
 
 typedef struct	s_intersection

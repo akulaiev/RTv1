@@ -48,23 +48,20 @@ int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
 int		cylinder_intersection(t_fig *cylinder, t_ray ray, t_intersection *its)
 {
 	t_dot	tmp;
+	t_dot	tmp1;
 	double	a;
 	double	b;
 	double	c;
-	t_dot	va;
 	t_dot	delta_p;
 
-	delta_p = vector_add(ray.origin, vector_mult(cylinder->first_end, -1));
+	delta_p = vector_add(ray.origin, vector_mult(cylinder->pa, -1));
 	normalize(&delta_p);
-	va = vector_add(cylinder->second_end, vector_mult(cylinder->first_end, -1));
-	normalize(&va);
 
-	tmp = vector_add(ray.vect, vector_mult(vector_mult(va, vector_scalar(ray.vect, va)), -1));
+	tmp = vector_add(ray.vect, vector_mult(vector_mult(cylinder->va, vector_scalar(ray.vect, cylinder->va)), -1));
+	tmp1 = vector_add(ray.vect, vector_mult(vector_mult(delta_p, vector_scalar(delta_p, cylinder->va)), -1));
 	a = vector_scalar(tmp, tmp);
-	b = 2 * vector_scalar(tmp, vector_add(delta_p,
-	vector_mult(vector_mult(va, vector_scalar(delta_p, va)), -1)));
-	tmp = vector_add(delta_p, vector_mult(vector_mult(va, vector_scalar(delta_p, va)), -1));
-	c = vector_scalar(tmp, tmp) - pow(cylinder->radius, 2);
+	b = 2 * vector_scalar(tmp, tmp1);
+	c = vector_scalar(tmp1, tmp1) - pow(cylinder->radius, 2);
 	
 	its->d = pow(b, 2) - 4 * a * c;
 	if (its->d < 0)
