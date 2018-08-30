@@ -79,89 +79,65 @@ int		main(void)
 	t_data		data;
 	t_cam		camera;
 	t_fig		sphere;
-	t_fig		plane;
-	t_fig		sphere1;
-	t_fig		sphere2;
-	t_shape		shapes[4];
+	// t_fig		plane;
+	t_shape		shapes[3];
 	t_light		l;
-	t_fig		cylinder;
+	// t_fig		cylinder;
 
 
 	data.ww = 950;
 	data.wh = 950;
-	camera.origin.x = 0;
-	camera.origin.y = 0;
-	camera.origin.z = 0;
-
-	camera.basis.dir_vect.x = 0;
-	camera.basis.dir_vect.y = 0;
-	camera.basis.dir_vect.z = 1;
+	camera.origin.x = 5;
+	camera.origin.y = -28;
+	camera.origin.z = 10;
+	camera.basis.dir_vect.x = -1;
+	camera.basis.dir_vect.y = 5;
+	camera.basis.dir_vect.z = -1;
 	normalize(&camera.basis.dir_vect);
 	camera.basis = get_basis(camera.basis.dir_vect);
 
-	l.lts[0].x = -3;
-	l.lts[0].y = 10;
+	l.lts[0].x = 5;
+	l.lts[0].y = -6;
 	l.lts[0].z = 5;
-	l.lts[1].x = 3;
-	l.lts[1].y = 10;
-	l.lts[1].z = -5;
-	l.lts[2].x = 1;
-	l.lts[2].y = -1;
-	l.lts[2].z = 1;
-	l.num_l = 3;
-	sphere.centre.x = 0;
-	sphere.centre.y = -1;
-	sphere.centre.z = 5;
-	sphere.radius = 1;
+	l.lts[1].x = -5;
+	l.lts[1].y = -6;
+	l.lts[1].z = 1;
+	l.num_l = 2;
+
+	sphere.centre.x = -2;
+	sphere.centre.y = -3;
+	sphere.centre.z = 1;
+	sphere.radius = 3;
 	sphere.constant_col.integer = 0xff00c7;
 	sphere.name = "sphere";
 
-	sphere1.centre.x = -3;
-	sphere1.centre.y = -1;
-	sphere1.centre.z = 5;
-	sphere1.radius = 1;
-	sphere1.constant_col.integer = 0x42f4f1;
-	sphere1.name = "sphere";
+	// plane.centre.x = 0;
+	// plane.centre.y = 6;
+	// plane.centre.z = 0;
+	// plane.normal.x = 2;
+	// plane.normal.y = 1;
+	// plane.normal.z = 4;
+	// normalize(&plane.normal);
+	// plane.constant_col.integer = 0xcccecc;
+	// plane.name = "plane";
 
-	sphere2.centre.x = -2;
-	sphere2.centre.y = -1;
-	sphere2.centre.z = 7;
-	sphere2.radius = 1;
-	sphere2.constant_col.integer = 0xf4d142;
-	sphere2.name = "sphere";
-
-	plane.centre.x = 0;
-	plane.centre.y = -5;
-	plane.centre.z = 0;
-	plane.normal.x = 0;
-	plane.normal.y = 1;
-	plane.normal.z = 0;
-	plane.constant_col.integer = 0xcccecc;
-	plane.name = "plane";
-
-	cylinder.centre.x = 0;
-	cylinder.centre.y = 0;
-	cylinder.centre.z = 0;
-	cylinder.va.x = 0;
-	cylinder.va.y = 0;
-	cylinder.va.z = 1;
-	cylinder.radius = 1;
-	cylinder.constant_col.integer = 0xadf442;
-	cylinder.name = "cylinder";
+	// cylinder.centre.x = 3;
+	// cylinder.centre.y = -3;
+	// cylinder.centre.z = 0;
+	// cylinder.va.x = 6;
+	// cylinder.va.y = 2;
+	// cylinder.va.z = -10;
+	// normalize(&cylinder.va);
+	// cylinder.radius = 2;
+	// cylinder.constant_col.integer = 0xadf442;
+	// cylinder.name = "cylinder";
 
 	shapes[0].data = &sphere;
 	shapes[0].f = &sphere_intersection;
-	shapes[1].data = &sphere1;
-	shapes[1].f = &sphere_intersection;
-	shapes[2].data = &plane;
-	shapes[2].f = &plane_intersection;
-	shapes[3].data = &sphere2;
-	shapes[3].f = &sphere_intersection;
-	// shapes[4].data = &cylinder;
-	// shapes[4].f = &cylinder_intersection;
-
-	// shapes[0].data = &cylinder;
-	// shapes[0].f = &cylinder_intersection;
+	// shapes[1].data = &plane;
+	// shapes[1].f = &plane_intersection;
+	// shapes[2].data = &cylinder;
+	// shapes[2].f = &cylinder_intersection;
 
 	open_win(&data);
 	deal_with_threads(&data, camera, shapes, l);

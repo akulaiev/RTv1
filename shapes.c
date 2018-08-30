@@ -28,8 +28,7 @@ t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t)
 	its->ray_point = vector_add(ray.origin, vector_mult(ray.vect, its->t));
 	if (!ft_strcmp(fig.name, "sphere"))
 	{
-		its->normal = vector_divide(vector_add(its->ray_point,
-		vector_mult(fig.centre, -1)), fig.radius);
+		its->normal = vector_divide(vector_minus(its->ray_point, fig.centre), fig.radius);
 		normalize(&its->normal);
 	}
 	else if (!ft_strcmp(fig.name, "cylinder"))
@@ -50,7 +49,7 @@ int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
 
 	i = -1;
 	its->closest_t = INFINITY;
-	while (++i < 4)
+	while (++i < 1)
 	{
 		if (t->shapes[i].f(t->shapes[i].data, ray, its) && its->t < its->closest_t)
 		{
@@ -78,8 +77,8 @@ int		cylinder_intersection(t_fig *cy, t_ray ray, t_intersection *its)
 	c = vector_scalar(tmp1, tmp1) - (cy->radius * cy->radius);
 	its->d = pow(b, 2) - 4 * a * c;
 	if (its->d < 0 || (a == 0 && b == 0) ||
-		((its->t = (-b - sqrt(its->d)) / (2.0 * a)) <= 0.00001 &&
-		(its->t = (-b + sqrt(its->d)) / (2.0 * a)) <= 0.00001))
+	((its->t = (-b - sqrt(its->d)) / (2.0 * a)) <= 0.00001 &&
+	(its->t = (-b + sqrt(its->d)) / (2.0 * a)) <= 0.00001))
 		return (0);
 	return (1);
 }
@@ -93,13 +92,23 @@ int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
 	e_min_c = vector_add(ray.origin, vector_mult(sphere->centre, -1));
 	p1 = vector_scalar(ray.vect, e_min_c);
 	p1 *= p1;
-	p2 = vector_scalar(e_min_c, e_min_c) - (sphere->radius * sphere->radius);
+	p2 = vector_scalar(ray.vect, ray.vect) *
+	vector_scalar(e_min_c, e_min_c) - (sphere->radius * sphere->radius);
 	its->d = p1 - p2;
-	if (its->d < 0 ||
-		((its->t = vector_scalar(vector_mult(ray.vect, -1), e_min_c) + sqrt(its->d)) < 1e-6 &&
-		(its->t = vector_scalar(vector_mult(ray.vect, -1), e_min_c) - sqrt(its->d)) < 1e-6))
+	if (its->d < 0)
 		return (0);
-	return (1);
+	else
+	{
+		its->t0 = (vector_scalar(vector_mult(ray.vect, -1), e_min_c) + sqrt(its->d))
+		/ vector_scalar(ray.vect, ray.vect);
+		its->t1 = (vector_scalar(vector_mult(ray.vect, -1), e_min_c) - sqrt(its->d))
+		/ vector_scalar(ray.vect, ray.vect);
+		if (its->t0 > 0 && its->t1 > 0 && its->t0 < its->t1)
+			its->t = its->t0;
+		if (its->t0 > 0 && its->t1 > 0 && its->t1 < its->t0)
+			its->t = its->t1;
+		return (1);
+	}
 }
 
 int		plane_intersection(t_fig *plane, t_ray ray, t_intersection *its)

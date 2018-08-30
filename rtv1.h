@@ -88,7 +88,7 @@ typedef	struct	s_cam
 
 typedef	struct	s_light
 {
-	t_dot	lts[3];
+	t_dot	lts[2];
 	int		num_l;
 }				t_light;
 
@@ -132,9 +132,9 @@ typedef struct	s_thread
 
 typedef struct	s_shd
 {
-	t_dot	l_vect[3];
+	t_dot	l_vect[2];
 	t_dot	v_vect;
-	t_dot	h_vect[3];
+	t_dot	h_vect[2];
 	t_col	col;
 	int		i;
 	double	nl;
