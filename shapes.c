@@ -103,9 +103,9 @@ int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
 		/ vector_scalar(ray.vect, ray.vect);
 		its->t1 = (vector_scalar(vector_mult(ray.vect, -1), e_min_c) - sqrt(its->d))
 		/ vector_scalar(ray.vect, ray.vect);
-		if (its->t0 > 0 && its->t1 > 0 && its->t0 < its->t1)
+		if ((its->t0 > 0 && its->t1 > 0 && its->t0 < its->t1) || (its->t0 > 0 && its->t1 < 0))
 			its->t = its->t0;
-		if (its->t0 > 0 && its->t1 > 0 && its->t1 < its->t0)
+		if ((its->t0 > 0 && its->t1 > 0 && its->t1 < its->t0) || (its->t1 > 0 && its->t0 < 0))
 			its->t = its->t1;
 		return (1);
 	}
