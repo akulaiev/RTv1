@@ -82,7 +82,7 @@ int		main(void)
 	t_fig		plane;
 	t_fig		sphere1;
 	t_fig		sphere2;
-	t_shape		shapes[5];
+	t_shape		shapes[4];
 	t_light		l;
 	t_fig		cylinder;
 
@@ -109,24 +109,26 @@ int		main(void)
 	l.lts[2].y = -1;
 	l.lts[2].z = 1;
 	l.num_l = 3;
-
 	sphere.centre.x = 0;
 	sphere.centre.y = -1;
 	sphere.centre.z = 5;
 	sphere.radius = 1;
 	sphere.constant_col.integer = 0xff00c7;
+	sphere.name = "sphere";
 
 	sphere1.centre.x = -3;
 	sphere1.centre.y = -1;
 	sphere1.centre.z = 5;
 	sphere1.radius = 1;
 	sphere1.constant_col.integer = 0x42f4f1;
+	sphere1.name = "sphere";
 
 	sphere2.centre.x = -2;
 	sphere2.centre.y = -1;
 	sphere2.centre.z = 7;
 	sphere2.radius = 1;
 	sphere2.constant_col.integer = 0xf4d142;
+	sphere2.name = "sphere";
 
 	plane.centre.x = 0;
 	plane.centre.y = -5;
@@ -135,15 +137,17 @@ int		main(void)
 	plane.normal.y = 1;
 	plane.normal.z = 0;
 	plane.constant_col.integer = 0xcccecc;
+	plane.name = "plane";
 
-	cylinder.pa.x = 0;
-	cylinder.pa.y = 0;
-	cylinder.pa.z = 0;
+	cylinder.centre.x = 0;
+	cylinder.centre.y = 0;
+	cylinder.centre.z = 0;
 	cylinder.va.x = 0;
 	cylinder.va.y = 0;
 	cylinder.va.z = 1;
 	cylinder.radius = 1;
 	cylinder.constant_col.integer = 0xadf442;
+	cylinder.name = "cylinder";
 
 	shapes[0].data = &sphere;
 	shapes[0].f = &sphere_intersection;
@@ -153,8 +157,11 @@ int		main(void)
 	shapes[2].f = &plane_intersection;
 	shapes[3].data = &sphere2;
 	shapes[3].f = &sphere_intersection;
-	shapes[4].data = &cylinder;
-	shapes[4].f = &cylinder_intersection;
+	// shapes[4].data = &cylinder;
+	// shapes[4].f = &cylinder_intersection;
+
+	// shapes[0].data = &cylinder;
+	// shapes[0].f = &cylinder_intersection;
 
 	open_win(&data);
 	deal_with_threads(&data, camera, shapes, l);

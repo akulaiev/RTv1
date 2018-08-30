@@ -59,6 +59,7 @@ typedef	struct	s_fig
 	t_col	constant_col;
 	t_dot	va;
 	t_dot	pa;
+	char	*name;
 }				t_fig;
 
 typedef struct	s_intersection
