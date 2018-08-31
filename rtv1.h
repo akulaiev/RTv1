@@ -54,6 +54,7 @@ typedef struct	s_ray
 typedef	struct	s_fig
 {
 	t_dot	centre;
+	t_dot	centre_up;
 	double	radius;
 	t_dot	normal;
 	t_col	constant_col;

@@ -67,11 +67,18 @@ int		cylinder_intersection(t_fig *cy, t_ray ray, t_intersection *its)
 	b = 2 * vector_scalar(tmp, tmp1);
 	c = vector_scalar(tmp1, tmp1) - (cy->radius * cy->radius);
 	its->d = pow(b, 2) - 4 * a * c;
-	if (its->d < 0 || (a == 0 && b == 0) ||
-	((its->t = (-b - sqrt(its->d)) / (2.0 * a)) <= 0.00001 &&
-	(its->t = (-b + sqrt(its->d)) / (2.0 * a)) <= 0.00001))
+	if (its->d < 0 || (a == 0 && b == 0))
 		return (0);
-	return (1);
+	else
+	{
+		its->t0 = (-b - sqrt(its->d)) / (2 * a);
+		its->t1 = (-b + sqrt(its->d)) / (2 * a);
+		if ((its->t0 > 0 && its->t1 > 0 && its->t0 < its->t1) || (its->t0 > 0 && its->t1 <= 0))
+			its->t = its->t0;
+		else if ((its->t0 > 0 && its->t1 > 0 && its->t1 < its->t0) || (its->t1 > 0 && its->t0 <= 0))
+			its->t = its->t1;
+		return (1);
+	}
 }
 
 int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
@@ -94,9 +101,9 @@ int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
 		/ vector_scalar(ray.vect, ray.vect);
 		its->t1 = (vector_scalar(vector_mult(ray.vect, -1), e_min_c) - sqrt(its->d))
 		/ vector_scalar(ray.vect, ray.vect);
-		if ((its->t0 > 0 && its->t1 > 0 && its->t0 < its->t1) || (its->t0 > 0 && its->t1 < 0))
+		if ((its->t0 > 0 && its->t1 > 0 && its->t0 < its->t1) || (its->t0 > 0 && its->t1 <= 0))
 			its->t = its->t0;
-		if ((its->t0 > 0 && its->t1 > 0 && its->t1 < its->t0) || (its->t1 > 0 && its->t0 < 0))
+		if ((its->t0 > 0 && its->t1 > 0 && its->t1 < its->t0) || (its->t1 > 0 && its->t0 <= 0))
 			its->t = its->t1;
 		return (1);
 	}
