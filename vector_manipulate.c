@@ -39,3 +39,13 @@ t_base	get_basis(t_dot vect)
 	res.dir_vect = vect;
 	return (res);
 }
+
+t_dot	vector_minus(t_dot first, t_dot second)
+{
+	t_dot	res;
+
+	res.x = first.x - second.x;
+	res.y = first.y - second.y;
+	res.z = first.z - second.z;
+	return (res);
+}

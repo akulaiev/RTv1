@@ -13,16 +13,6 @@
 #include "rtv1.h"
 #include <stdio.h>
 
-t_dot	vector_minus(t_dot first, t_dot second)
-{
-	t_dot	res;
-
-	res.x = first.x - second.x;
-	res.y = first.y - second.y;
-	res.z = first.z - second.z;
-	return (res);
-}
-
 t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t)
 {
 	its->ray_point = vector_add(ray.origin, vector_mult(ray.vect, its->t));
@@ -33,8 +23,8 @@ t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t)
 	}
 	else if (!ft_strcmp(fig.name, "cylinder"))
 	{
-		its->normal = vector_minus(vector_minus(its->ray_point, fig.pa), 
-		vector_mult(fig.va, vector_scalar(fig.va, vector_minus(its->ray_point, fig.pa))));
+		its->normal = vector_minus(vector_minus(its->ray_point, fig.centre), 
+		vector_mult(fig.direction, vector_scalar(fig.direction, vector_minus(its->ray_point, fig.centre))));
 		normalize(&its->normal);
 	}
 	else if (!ft_strcmp(fig.name, "plane"))
@@ -49,7 +39,8 @@ int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
 
 	i = -1;
 	its->closest_t = INFINITY;
-	while (++i < 1)
+	col = 0;
+	while (++i < 3)
 	{
 		if (t->shapes[i].f(t->shapes[i].data, ray, its) && its->t < its->closest_t)
 		{
@@ -70,8 +61,8 @@ int		cylinder_intersection(t_fig *cy, t_ray ray, t_intersection *its)
 	t_dot	delta_p;
 
 	delta_p = vector_minus(ray.origin, cy->centre);
-	tmp = vector_minus(ray.vect, vector_mult(cy->va, vector_scalar(ray.vect, cy->va)));
-	tmp1 = vector_minus(delta_p, vector_mult(cy->va, vector_scalar(delta_p, cy->va)));
+	tmp = vector_minus(ray.vect, vector_mult(cy->direction, vector_scalar(ray.vect, cy->direction)));
+	tmp1 = vector_minus(delta_p, vector_mult(cy->direction, vector_scalar(delta_p, cy->direction)));
 	a = vector_scalar(tmp, tmp);
 	b = 2 * vector_scalar(tmp, tmp1);
 	c = vector_scalar(tmp1, tmp1) - (cy->radius * cy->radius);

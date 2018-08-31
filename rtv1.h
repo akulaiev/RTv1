@@ -57,8 +57,7 @@ typedef	struct	s_fig
 	double	radius;
 	t_dot	normal;
 	t_col	constant_col;
-	t_dot	va;
-	t_dot	pa;
+	t_dot	direction;
 	char	*name;
 }				t_fig;
 
@@ -160,6 +159,7 @@ t_col		lambert_shading(t_col *constant_col, t_intersection *its);
 void		img_pixel_put(t_data *win, int x, int y, int col);
 void		deal_with_threads(t_data *win, t_cam camera, t_shape *shapes, t_light l);
 void		*create_ray(void *w);
+t_dot		vector_minus(t_dot first, t_dot second);
 
 t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t);
 int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its);

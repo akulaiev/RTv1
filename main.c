@@ -79,16 +79,16 @@ int		main(void)
 	t_data		data;
 	t_cam		camera;
 	t_fig		sphere;
-	// t_fig		plane;
+	t_fig		plane;
 	t_shape		shapes[3];
 	t_light		l;
-	// t_fig		cylinder;
+	t_fig		cylinder;
 
 
 	data.ww = 950;
 	data.wh = 950;
 	camera.origin.x = 5;
-	camera.origin.y = -28;
+	camera.origin.y = -20;
 	camera.origin.z = 10;
 	camera.basis.dir_vect.x = -1;
 	camera.basis.dir_vect.y = 5;
@@ -106,38 +106,38 @@ int		main(void)
 
 	sphere.centre.x = -2;
 	sphere.centre.y = -3;
-	sphere.centre.z = 1;
+	sphere.centre.z = 3;
 	sphere.radius = 3;
-	sphere.constant_col.integer = 0xff00c7;
+	sphere.constant_col.integer = 0x42f489;
 	sphere.name = "sphere";
 
-	// plane.centre.x = 0;
-	// plane.centre.y = 6;
-	// plane.centre.z = 0;
-	// plane.normal.x = 2;
-	// plane.normal.y = 1;
-	// plane.normal.z = 4;
-	// normalize(&plane.normal);
-	// plane.constant_col.integer = 0xcccecc;
-	// plane.name = "plane";
+	plane.centre.x = 3;
+	plane.centre.y = 0;
+	plane.centre.z = 0;
+	plane.normal.x = 0;
+	plane.normal.y = 0;
+	plane.normal.z = 10;
+	normalize(&plane.normal);
+	plane.constant_col.integer = 0xcccecc;
+	plane.name = "plane";
 
-	// cylinder.centre.x = 3;
-	// cylinder.centre.y = -3;
-	// cylinder.centre.z = 0;
-	// cylinder.va.x = 6;
-	// cylinder.va.y = 2;
-	// cylinder.va.z = -10;
-	// normalize(&cylinder.va);
-	// cylinder.radius = 2;
-	// cylinder.constant_col.integer = 0xadf442;
-	// cylinder.name = "cylinder";
+	cylinder.centre.x = 3;
+	cylinder.centre.y = 7;
+	cylinder.centre.z = 0;
+	cylinder.direction.x = 6;
+	cylinder.direction.y = 2;
+	cylinder.direction.z = -10;
+	normalize(&cylinder.direction);
+	cylinder.radius = 5;
+	cylinder.constant_col.integer = 0x4161f4;
+	cylinder.name = "cylinder";
 
 	shapes[0].data = &sphere;
 	shapes[0].f = &sphere_intersection;
-	// shapes[1].data = &plane;
-	// shapes[1].f = &plane_intersection;
-	// shapes[2].data = &cylinder;
-	// shapes[2].f = &cylinder_intersection;
+	shapes[1].data = &plane;
+	shapes[1].f = &plane_intersection;
+	shapes[2].data = &cylinder;
+	shapes[2].f = &cylinder_intersection;
 
 	open_win(&data);
 	deal_with_threads(&data, camera, shapes, l);
