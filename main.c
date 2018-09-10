@@ -80,7 +80,8 @@ int		main(void)
 	t_cam		camera;
 	t_fig		sphere;
 	t_fig		plane;
-	t_shape		shapes[3];
+	t_fig		cone;
+	t_shape		shapes[4];
 	t_light		l;
 	t_fig		cylinder;
 
@@ -132,12 +133,25 @@ int		main(void)
 	cylinder.constant_col.integer = 0x4161f4;
 	cylinder.name = "cylinder";
 
+	cone.centre.x = 5;
+	cone.centre.y = 1;
+	cone.centre.z = 1;
+	cone.direction.x = -5;
+	cone.direction.y = 1;
+	cone.direction.z = -9;
+	normalize(&cone.direction);
+	cone.angle = 0.25;
+	cone.constant_col.integer = 0xf441a6;
+	cone.name = "cone";
+
 	shapes[0].data = &sphere;
 	shapes[0].f = &sphere_intersection;
 	shapes[1].data = &plane;
 	shapes[1].f = &plane_intersection;
 	shapes[2].data = &cylinder;
 	shapes[2].f = &cylinder_intersection;
+	shapes[3].data = &cone;
+	shapes[3].f = &cone_intersection;
 
 	open_win(&data);
 	deal_with_threads(&data, camera, shapes, l);
