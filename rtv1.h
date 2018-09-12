@@ -144,6 +144,16 @@ typedef struct	s_shd
 	int		tmp_b;
 }				t_shd;
 
+typedef struct	s_cy
+{
+	t_dot	tmp;
+	t_dot	tmp1;
+	double	a;
+	double	b;
+	double	c;
+	t_dot	delta_p;
+}				t_cy;
+
 int			key_react(int keycode, void *param);
 t_dot		vector_add(t_dot first, t_dot second);
 t_dot		vector_mult(t_dot first, double val);
