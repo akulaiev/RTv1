@@ -27,6 +27,14 @@ t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t)
 		vector_mult(fig.direction, vector_scalar(fig.direction, vector_minus(its->ray_point, fig.centre))));
 		normalize(&its->normal);
 	}
+	else if (!ft_strcmp(fig.name, "cone"))
+	{
+		its->normal = vector_minus(vector_minus(its->ray_point, fig.centre), 
+		vector_mult(fig.direction, vector_scalar(fig.direction, vector_minus(its->ray_point, fig.centre))));
+		normalize(&its->normal);
+		its->normal = vector_add(vector_mult(its->normal,
+		cos(fig.angle)), vector_mult(fig.direction, sin(fig.angle)));
+	}
 	else if (!ft_strcmp(fig.name, "plane"))
 		its->normal = fig.normal;
 	return (blinn_phong_shading(&fig.constant_col, its, t));
@@ -40,7 +48,7 @@ int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
 	i = -1;
 	its->closest_t = INFINITY;
 	col = 0;
-	while (++i < 3)
+	while (++i < 4)
 	{
 		if (t->shapes[i].f(t->shapes[i].data, ray, its) && its->t < its->closest_t)
 		{
@@ -74,6 +82,32 @@ int		cylinder_intersection(t_fig *cy, t_ray ray, t_intersection *its)
 			its->t = its->t1;
 		return (1);
 	}
+}
+
+int		cone_intersection(t_fig *co, t_ray ray, t_intersection *its)
+{
+	t_dot	tmp;
+	t_dot	tmp1;
+	double	a;
+	double	b;
+	double	c;
+	t_dot	delta_p;
+
+	delta_p = vector_minus(ray.origin, co->centre);
+	tmp = vector_minus(ray.vect, vector_mult(co->direction, vector_scalar(ray.vect, co->direction)));
+	tmp1 = vector_minus(delta_p, vector_mult(co->direction, vector_scalar(delta_p, co->direction)));
+	a = pow(cos(co->angle), 2) * vector_scalar(tmp, tmp) -
+	pow(sin(co->angle), 2) * pow(vector_scalar(ray.vect, co->direction), 2);
+	b = 2 * pow(cos(co->angle), 2) * vector_scalar(tmp, tmp1) -
+	2 * pow(sin(co->angle), 2) * vector_scalar(ray.vect, co->direction) * vector_scalar(delta_p, co->direction);
+	c = pow(cos(co->angle), 2) * vector_scalar(tmp1, tmp1) - (co->radius * co->radius) -
+	pow(sin(co->angle), 2) * pow(vector_scalar(delta_p, co->direction), 2);
+	its->d = pow(b, 2) - 4 * a * c;
+	if (its->d < 0 || (a == 0 && b == 0) ||
+	((its->t = (-b - sqrt(its->d)) / (2.0 * a)) <= 0.00001 &&
+	(its->t = (-b + sqrt(its->d)) / (2.0 * a)) <= 0.00001))
+		return (0);
+	return (1);
 }
 
 int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)

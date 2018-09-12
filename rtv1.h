@@ -56,6 +56,7 @@ typedef	struct	s_fig
 	t_dot	centre;
 	t_dot	centre_up;
 	double	radius;
+	double	angle;
 	t_dot	normal;
 	t_col	constant_col;
 	t_dot	direction;
@@ -171,9 +172,10 @@ void		img_pixel_put(t_data *win, int x, int y, int col);
 void		deal_with_threads(t_data *win, t_cam camera, t_shape *shapes, t_light l);
 void		*create_ray(void *w);
 t_dot		vector_minus(t_dot first, t_dot second);
+t_col		get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t);
+int			get_closest_shape(t_thread *t, t_ray ray, t_intersection *its);
+t_col		blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t);
+int			cylinder_intersection(t_fig *cylinder, t_ray ray, t_intersection *its);
+int			cone_intersection(t_fig *co, t_ray ray, t_intersection *its);
 
-t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t);
-int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its);
-t_col	blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t);
-int		cylinder_intersection(t_fig *cylinder, t_ray ray, t_intersection *its);
 #endif
