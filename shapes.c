@@ -86,26 +86,21 @@ int		cylinder_intersection(t_fig *cy, t_ray ray, t_intersection *its)
 
 int		cone_intersection(t_fig *co, t_ray ray, t_intersection *its)
 {
-	t_dot	tmp;
-	t_dot	tmp1;
-	double	a;
-	double	b;
-	double	c;
-	t_dot	delta_p;
+	t_cy	c;
 
-	delta_p = vector_minus(ray.origin, co->centre);
-	tmp = vector_minus(ray.vect, vector_mult(co->direction, vector_scalar(ray.vect, co->direction)));
-	tmp1 = vector_minus(delta_p, vector_mult(co->direction, vector_scalar(delta_p, co->direction)));
-	a = pow(cos(co->angle), 2) * vector_scalar(tmp, tmp) -
+	c.delta_p = vector_minus(ray.origin, co->centre);
+	c.tmp = vector_minus(ray.vect, vector_mult(co->direction, vector_scalar(ray.vect, co->direction)));
+	c.tmp1 = vector_minus(c.delta_p, vector_mult(co->direction, vector_scalar(c.delta_p, co->direction)));
+	c.a = pow(cos(co->angle), 2) * vector_scalar(c.tmp, c.tmp) -
 	pow(sin(co->angle), 2) * pow(vector_scalar(ray.vect, co->direction), 2);
-	b = 2 * pow(cos(co->angle), 2) * vector_scalar(tmp, tmp1) -
-	2 * pow(sin(co->angle), 2) * vector_scalar(ray.vect, co->direction) * vector_scalar(delta_p, co->direction);
-	c = pow(cos(co->angle), 2) * vector_scalar(tmp1, tmp1) - (co->radius * co->radius) -
-	pow(sin(co->angle), 2) * pow(vector_scalar(delta_p, co->direction), 2);
-	its->d = pow(b, 2) - 4 * a * c;
-	if (its->d < 0 || (a == 0 && b == 0) ||
-	((its->t = (-b - sqrt(its->d)) / (2.0 * a)) <= 0.00001 &&
-	(its->t = (-b + sqrt(its->d)) / (2.0 * a)) <= 0.00001))
+	c.b = 2 * pow(cos(co->angle), 2) * vector_scalar(c.tmp, c.tmp1) -
+	2 * pow(sin(co->angle), 2) * vector_scalar(ray.vect, co->direction) * vector_scalar(c.delta_p, co->direction);
+	c.c = pow(cos(co->angle), 2) * vector_scalar(c.tmp1, c.tmp1) - (co->radius * co->radius) -
+	pow(sin(co->angle), 2) * pow(vector_scalar(c.delta_p, co->direction), 2);
+	its->d = pow(c.b, 2) - 4 * c.a * c.c;
+	if (its->d < 0 || (c.a == 0 && c.b == 0) ||
+	((its->t = (-c.b - sqrt(its->d)) / (2.0 * c.a)) <= 0.00001 &&
+	(its->t = (-c.b + sqrt(its->d)) / (2.0 * c.a)) <= 0.00001))
 		return (0);
 	return (1);
 }
