@@ -21,11 +21,11 @@ t_col	blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t)
 	s.tmp_g = 0;
 	s.tmp_b = 0;
 	s.i = -1;
-	s.v_vect = vector_add(t->camera.origin, vector_mult(its->ray_point, -1));
+	s.v_vect = vector_minus(t->camera.origin, its->ray_point);
 		normalize(&s.v_vect);
 	while (++s.i < t->lights.num_l)
 	{
-		s.l_vect[s.i] = vector_add(t->lights.lts[s.i], vector_mult(its->ray_point, -1));
+		s.l_vect[s.i] = vector_minus(t->lights.lts[s.i], its->ray_point);
 		normalize(&s.l_vect[s.i]);
 		s.h_vect[s.i] = vector_add(s.l_vect[s.i], s.v_vect);
 		normalize(&s.h_vect[s.i]);
