@@ -124,10 +124,14 @@ int		main(void)
 
 	cylinder.centre.x = 3;
 	cylinder.centre.y = 7;
-	cylinder.centre.z = 0;
-	cylinder.direction.x = 6;
-	cylinder.direction.y = 2;
-	cylinder.direction.z = -10;
+	cylinder.centre.z = 1;
+	cylinder.centre_up.x = 3;
+	cylinder.centre_up.y = 7;
+	cylinder.centre_up.z = 3;
+	cylinder.direction = vector_minus(cylinder.centre_up, cylinder.centre);
+	// cylinder.direction.x = 6;
+	// cylinder.direction.y = 2;
+	// cylinder.direction.z = -10;
 	normalize(&cylinder.direction);
 	cylinder.radius = 5;
 	cylinder.constant_col.integer = 0x4161f4;

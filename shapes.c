@@ -61,49 +61,46 @@ int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
 
 int		cylinder_intersection(t_fig *cy, t_ray ray, t_intersection *its)
 {
-	t_dot	tmp;
-	t_dot	tmp1;
-	double	a;
-	double	b;
-	double	c;
-	t_dot	delta_p;
+	t_cy	c;
 
-	delta_p = vector_minus(ray.origin, cy->centre);
-	tmp = vector_minus(ray.vect, vector_mult(cy->direction, vector_scalar(ray.vect, cy->direction)));
-	tmp1 = vector_minus(delta_p, vector_mult(cy->direction, vector_scalar(delta_p, cy->direction)));
-	a = vector_scalar(tmp, tmp);
-	b = 2 * vector_scalar(tmp, tmp1);
-	c = vector_scalar(tmp1, tmp1) - (cy->radius * cy->radius);
-	its->d = pow(b, 2) - 4 * a * c;
-	if (its->d < 0 || (a == 0 && b == 0) ||
-	((its->t = (-b - sqrt(its->d)) / (2.0 * a)) <= 0.00001 &&
-	(its->t = (-b + sqrt(its->d)) / (2.0 * a)) <= 0.00001))
+	c.delta_p = vector_minus(ray.origin, cy->centre);
+	c.tmp = vector_minus(ray.vect, vector_mult(cy->direction, vector_scalar(ray.vect, cy->direction)));
+	c.tmp1 = vector_minus(c.delta_p, vector_mult(cy->direction, vector_scalar(c.delta_p, cy->direction)));
+	c.a = vector_scalar(c.tmp, c.tmp);
+	c.b = 2 * vector_scalar(c.tmp, c.tmp1);
+	c.c = vector_scalar(c.tmp1, c.tmp1) - (cy->radius * cy->radius);
+	its->d = pow(c.b, 2) - 4 * c.a * c.c;
+	if (its->d < 0 || (c.a == 0 && c.b == 0))
 		return (0);
-	return (1);
+	else
+	{
+		its->t0 = (-c.b - sqrt(its->d)) / (2 * c.a);
+		its->t1 = (-c.b + sqrt(its->d)) / (2 * c.a);
+		if ((its->t0 > 0 && its->t1 > 0 && its->t0 < its->t1) || (its->t0 > 0 && its->t1 < 0))
+			its->t = its->t0;
+		else if ((its->t0 > 0 && its->t1 > 0 && its->t1 < its->t0) || (its->t1 > 0 && its->t0 < 0))
+			its->t = its->t1;
+		return (1);
+	}
 }
 
 int		cone_intersection(t_fig *co, t_ray ray, t_intersection *its)
 {
-	t_dot	tmp;
-	t_dot	tmp1;
-	double	a;
-	double	b;
-	double	c;
-	t_dot	delta_p;
+	t_cy	c;
 
-	delta_p = vector_minus(ray.origin, co->centre);
-	tmp = vector_minus(ray.vect, vector_mult(co->direction, vector_scalar(ray.vect, co->direction)));
-	tmp1 = vector_minus(delta_p, vector_mult(co->direction, vector_scalar(delta_p, co->direction)));
-	a = pow(cos(co->angle), 2) * vector_scalar(tmp, tmp) -
+	c.delta_p = vector_minus(ray.origin, co->centre);
+	c.tmp = vector_minus(ray.vect, vector_mult(co->direction, vector_scalar(ray.vect, co->direction)));
+	c.tmp1 = vector_minus(c.delta_p, vector_mult(co->direction, vector_scalar(c.delta_p, co->direction)));
+	c.a = pow(cos(co->angle), 2) * vector_scalar(c.tmp, c.tmp) -
 	pow(sin(co->angle), 2) * pow(vector_scalar(ray.vect, co->direction), 2);
-	b = 2 * pow(cos(co->angle), 2) * vector_scalar(tmp, tmp1) -
-	2 * pow(sin(co->angle), 2) * vector_scalar(ray.vect, co->direction) * vector_scalar(delta_p, co->direction);
-	c = pow(cos(co->angle), 2) * vector_scalar(tmp1, tmp1) - (co->radius * co->radius) -
-	pow(sin(co->angle), 2) * pow(vector_scalar(delta_p, co->direction), 2);
-	its->d = pow(b, 2) - 4 * a * c;
-	if (its->d < 0 || (a == 0 && b == 0) ||
-	((its->t = (-b - sqrt(its->d)) / (2.0 * a)) <= 0.00001 &&
-	(its->t = (-b + sqrt(its->d)) / (2.0 * a)) <= 0.00001))
+	c.b = 2 * pow(cos(co->angle), 2) * vector_scalar(c.tmp, c.tmp1) -
+	2 * pow(sin(co->angle), 2) * vector_scalar(ray.vect, co->direction) * vector_scalar(c.delta_p, co->direction);
+	c.c = pow(cos(co->angle), 2) * vector_scalar(c.tmp1, c.tmp1) - (co->radius * co->radius) -
+	pow(sin(co->angle), 2) * pow(vector_scalar(c.delta_p, co->direction), 2);
+	its->d = pow(c.b, 2) - 4 * c.a * c.c;
+	if (its->d < 0 || (c.a == 0 && c.b == 0) ||
+	((its->t = (-c.b - sqrt(its->d)) / (2.0 * c.a)) <= 0.00001 &&
+	(its->t = (-c.b + sqrt(its->d)) / (2.0 * c.a)) <= 0.00001))
 		return (0);
 	return (1);
 }

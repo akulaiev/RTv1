@@ -54,6 +54,7 @@ typedef struct	s_ray
 typedef	struct	s_fig
 {
 	t_dot	centre;
+	t_dot	centre_up;
 	double	radius;
 	double	angle;
 	t_dot	normal;
@@ -143,6 +144,16 @@ typedef struct	s_shd
 	int		tmp_g;
 	int		tmp_b;
 }				t_shd;
+
+typedef struct	s_cy
+{
+	t_dot	tmp;
+	t_dot	tmp1;
+	double	a;
+	double	b;
+	double	c;
+	t_dot	delta_p;
+}				t_cy;
 
 int			key_react(int keycode, void *param);
 t_dot		vector_add(t_dot first, t_dot second);
