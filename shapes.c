@@ -48,7 +48,7 @@ int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
 	i = -1;
 	its->closest_t = INFINITY;
 	col = 0;
-	while (++i < 4)
+	while (++i < 2)
 	{
 		if (t->shapes[i].f(t->shapes[i].data, ray, its) && its->t < its->closest_t)
 		{

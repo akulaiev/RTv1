@@ -133,7 +133,7 @@ typedef struct	s_thread
 
 typedef struct	s_shd
 {
-	t_dot	l_vect[2];
+	t_ray	l_vect[2];
 	t_dot	v_vect;
 	t_dot	h_vect[2];
 	t_col	col;

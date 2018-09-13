@@ -16,6 +16,9 @@
 t_col	blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t)
 {
 	t_shd	s;
+	int		i;
+	double	light_len;
+	t_intersection its1;
 
 	s.tmp_r = 0;
 	s.tmp_g = 0;
@@ -25,11 +28,23 @@ t_col	blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t)
 		normalize(&s.v_vect);
 	while (++s.i < t->lights.num_l)
 	{
-		s.l_vect[s.i] = vector_minus(t->lights.lts[s.i], its->ray_point);
-		normalize(&s.l_vect[s.i]);
-		s.h_vect[s.i] = vector_add(s.l_vect[s.i], s.v_vect);
+		s.l_vect[s.i].vect = vector_minus(t->lights.lts[s.i], its->ray_point);
+		light_len = sqrt(s.l_vect[s.i].vect.x * s.l_vect[s.i].vect.x + s.l_vect[s.i].vect.y *
+		s.l_vect[s.i].vect.y + s.l_vect[s.i].vect.z * s.l_vect[s.i].vect.z);
+		normalize(&s.l_vect[s.i].vect);
+		s.l_vect[s.i].origin = its->ray_point;
+		i = -1;
+		while (++i < 2)
+		{
+			if (t->shapes[i].f(t->shapes[i].data, s.l_vect[s.i], &its1) && light_len > its1.t)
+			{
+				s.col.integer = 0;
+				return (s.col);
+			}
+		}
+		s.h_vect[s.i] = vector_add(s.l_vect[s.i].vect, s.v_vect);
 		normalize(&s.h_vect[s.i]);
-		s.nl = fmax(0, vector_scalar(its->normal, s.l_vect[s.i]));
+		s.nl = fmax(0, vector_scalar(its->normal, s.l_vect[s.i].vect));
 		s.hl = fmax(0, pow(vector_scalar(its->normal, s.h_vect[s.i]), 100));
 		s.tmp_r += constant_col->struct_col.r * s.nl + 131 * s.hl;
 		s.tmp_g += constant_col->struct_col.g * s.nl + 131 * s.hl;
@@ -81,7 +96,7 @@ int		main(void)
 	t_fig		sphere;
 	t_fig		plane;
 	t_fig		cone;
-	t_shape		shapes[4];
+	t_shape		shapes[2];
 	t_light		l;
 	t_fig		cylinder;
 
@@ -103,7 +118,7 @@ int		main(void)
 	l.lts[1].x = -5;
 	l.lts[1].y = -6;
 	l.lts[1].z = 1;
-	l.num_l = 2;
+	l.num_l = 1;
 
 	sphere.centre.x = -2;
 	sphere.centre.y = -3;
@@ -128,11 +143,9 @@ int		main(void)
 	cylinder.centre_up.x = 3;
 	cylinder.centre_up.y = 7;
 	cylinder.centre_up.z = 3;
-	cylinder.direction = vector_minus(cylinder.centre_up, cylinder.centre);
-	// cylinder.direction.x = 6;
-	// cylinder.direction.y = 2;
-	// cylinder.direction.z = -10;
-	normalize(&cylinder.direction);
+	cylinder.direction.x = 6;
+	cylinder.direction.y = 2;
+	cylinder.direction.z = -10;
 	cylinder.radius = 5;
 	cylinder.constant_col.integer = 0x4161f4;
 	cylinder.name = "cylinder";
@@ -152,10 +165,10 @@ int		main(void)
 	shapes[0].f = &sphere_intersection;
 	shapes[1].data = &plane;
 	shapes[1].f = &plane_intersection;
-	shapes[2].data = &cylinder;
-	shapes[2].f = &cylinder_intersection;
-	shapes[3].data = &cone;
-	shapes[3].f = &cone_intersection;
+	// shapes[2].data = &cylinder;
+	// shapes[2].f = &cylinder_intersection;
+	// shapes[3].data = &cone;
+	// shapes[3].f = &cone_intersection;
 
 	open_win(&data);
 	deal_with_threads(&data, camera, shapes, l);
