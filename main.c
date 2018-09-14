@@ -15,26 +15,28 @@
 
 t_col	blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t)
 {
-	t_shd	s;
-	int		i;
-	double	light_len;
-	t_intersection its1;
+	t_shd			s;
+	int				i;
+	double			light_len;
+	t_intersection	its1;
 
 	s.tmp_r = 0;
 	s.tmp_g = 0;
 	s.tmp_b = 0;
 	s.i = -1;
 	s.v_vect = vector_minus(t->camera.origin, its->ray_point);
-		normalize(&s.v_vect);
+	normalize(&s.v_vect);
 	while (++s.i < t->lights.num_l)
 	{
-		s.l_vect[s.i].vect = vector_minus(t->lights.lts[s.i], its->ray_point);
+		s.l_vect[s.i].origin.x = its->ray_point.x;
+		s.l_vect[s.i].origin.y = its->ray_point.y;
+		s.l_vect[s.i].origin.z = its->ray_point.z;
+		s.l_vect[s.i].vect = vector_minus(t->lights.lts[s.i], s.l_vect[s.i].origin);
 		light_len = sqrt(s.l_vect[s.i].vect.x * s.l_vect[s.i].vect.x + s.l_vect[s.i].vect.y *
 		s.l_vect[s.i].vect.y + s.l_vect[s.i].vect.z * s.l_vect[s.i].vect.z);
 		normalize(&s.l_vect[s.i].vect);
-		s.l_vect[s.i].origin = its->ray_point;
 		i = -1;
-		while (++i < 2)
+		while (++i < 4)
 		{
 			if (t->shapes[i].f(t->shapes[i].data, s.l_vect[s.i], &its1) && light_len > its1.t)
 			{
@@ -103,6 +105,7 @@ int		main(void)
 
 	data.ww = 950;
 	data.wh = 950;
+
 	camera.origin.x = 5;
 	camera.origin.y = -20;
 	camera.origin.z = 10;
@@ -140,12 +143,10 @@ int		main(void)
 	cylinder.centre.x = 3;
 	cylinder.centre.y = 7;
 	cylinder.centre.z = 1;
-	cylinder.centre_up.x = 3;
-	cylinder.centre_up.y = 7;
-	cylinder.centre_up.z = 3;
 	cylinder.direction.x = 6;
 	cylinder.direction.y = 2;
 	cylinder.direction.z = -10;
+	normalize(&cylinder.direction);
 	cylinder.radius = 5;
 	cylinder.constant_col.integer = 0x4161f4;
 	cylinder.name = "cylinder";
@@ -165,10 +166,10 @@ int		main(void)
 	shapes[0].f = &sphere_intersection;
 	shapes[1].data = &plane;
 	shapes[1].f = &plane_intersection;
-	// shapes[2].data = &cylinder;
-	// shapes[2].f = &cylinder_intersection;
-	// shapes[3].data = &cone;
-	// shapes[3].f = &cone_intersection;
+	shapes[2].data = &cylinder;
+	shapes[2].f = &cylinder_intersection;
+	shapes[3].data = &cone;
+	shapes[3].f = &cone_intersection;
 
 	open_win(&data);
 	deal_with_threads(&data, camera, shapes, l);
