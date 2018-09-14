@@ -1,3 +1,4 @@
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -31,14 +32,16 @@ t_col	blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t)
 		s.l_vect[s.i].origin.x = its->ray_point.x;
 		s.l_vect[s.i].origin.y = its->ray_point.y;
 		s.l_vect[s.i].origin.z = its->ray_point.z;
+
 		s.l_vect[s.i].vect = vector_minus(t->lights.lts[s.i], s.l_vect[s.i].origin);
 		light_len = sqrt(s.l_vect[s.i].vect.x * s.l_vect[s.i].vect.x + s.l_vect[s.i].vect.y *
 		s.l_vect[s.i].vect.y + s.l_vect[s.i].vect.z * s.l_vect[s.i].vect.z);
+		
 		normalize(&s.l_vect[s.i].vect);
 		i = -1;
 		while (++i < 4)
 		{
-			if (t->shapes[i].f(t->shapes[i].data, s.l_vect[s.i], &its1) && light_len > its1.t)
+			if (t->shapes[i].f(t->shapes[i].data, s.l_vect[s.i], &its1) && light_len > its1.t && its1.t > 0.0001)
 			{
 				s.col.integer = 0;
 				return (s.col);
@@ -116,7 +119,7 @@ int		main(void)
 	camera.basis = get_basis(camera.basis.dir_vect);
 
 	l.lts[0].x = 5;
-	l.lts[0].y = -6;
+	l.lts[0].y = -7;
 	l.lts[0].z = 5;
 	l.lts[1].x = -5;
 	l.lts[1].y = -6;
