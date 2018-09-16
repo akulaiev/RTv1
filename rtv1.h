@@ -104,6 +104,7 @@ typedef struct	s_data
 	int		ww;
 	int		wh;
 	int		lines_per_th;
+	t_cam	camera;
 }				t_data;
 
 typedef struct	s_iter
@@ -137,11 +138,13 @@ typedef struct	s_shd
 	t_dot	h_vect[2];
 	t_col	col;
 	int		i;
-	double	nl;
-	double	hl;
+	double	nl[2];
+	double	hl[2];
 	int		tmp_r;
 	int		tmp_g;
 	int		tmp_b;
+	int		j;
+	double	light_len;
 }				t_shd;
 
 typedef struct	s_cy
