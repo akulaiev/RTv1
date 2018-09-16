@@ -104,7 +104,6 @@ typedef struct	s_data
 	int		ww;
 	int		wh;
 	int		lines_per_th;
-	t_cam	camera;
 }				t_data;
 
 typedef struct	s_iter
@@ -126,9 +125,9 @@ typedef struct	s_thread
 {
 	int		current_y;
 	t_data	*win;
-	t_cam 	camera;
 	t_shape *shapes;
 	t_light	lights;
+	t_cam 	camera;
 }				t_thread;
 
 typedef struct	s_shd
@@ -179,5 +178,6 @@ int			get_closest_shape(t_thread *t, t_ray ray, t_intersection *its);
 t_col		blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t);
 int			cylinder_intersection(t_fig *cylinder, t_ray ray, t_intersection *its);
 int			cone_intersection(t_fig *co, t_ray ray, t_intersection *its);
+void		parser(int fd);
 
 #endif

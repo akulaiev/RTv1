@@ -91,9 +91,10 @@ int		main(int argc, char **argv)
 {
 	int		fd;
 
-	
-		fd = open(argv[1], O_RDONLY);
-		parser(fd);
+	if (argc != 2)
+		return (write(1, "Scene file needed!\n", 19));
+	fd = open(argv[1], O_RDONLY);
+	parser(fd);
 	// t_data		data;
 	// t_cam		camera;
 	// t_fig		sphere;
@@ -176,4 +177,6 @@ int		main(int argc, char **argv)
 	// deal_with_threads(&data, camera, shapes, l);
 	// mlx_put_image_to_window(data.mlx_p, data.mlx_nw, data.mlx_img, 0, 0);
 	// mlx_loop(data.mlx_p);
+	
+	system("leaks RTv1");
 }
