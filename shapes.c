@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+ /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   shapes.c                                           :+:      :+:    :+:   */
@@ -37,7 +37,9 @@ t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t)
 	}
 	else if (!ft_strcmp(fig.name, "plane"))
 		its->normal = fig.normal;
-	return (blinn_phong_shading(&fig.constant_col, its, t));
+	t->current_y = 0;
+	return (fig.constant_col);
+	// return (blinn_phong_shading(&fig.constant_col, its, t));
 }
 
 int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)

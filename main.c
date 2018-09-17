@@ -25,34 +25,34 @@ void	shading_help(t_shd *s, t_col *constant_col, t_intersection *its)
 	s->tmp_b += constant_col->struct_col.b * s->nl[s->i] + 131 * s->hl[s->i];
 }
 
-t_col	blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t)
-{
-	t_shd			s;
-	t_intersection	its1[2];
+// t_col	blinn_phong_shading(t_col *constant_col, t_intersection *its, t_thread *t)
+// {
+// 	t_shd			s;
+// 	t_intersection	its1[2];
 
-	s.tmp_r = 0;
-	s.tmp_g = 0;
-	s.tmp_b = 0;
-	s.i = -1;
-	s.v_vect = vector_minus(t->camera.origin, its->ray_point);
-	normalize(&s.v_vect);
-	while (++s.i < t->lights.num_l)
-	{
-		s.l_vect[s.i].origin = its->ray_point;
-		s.l_vect[s.i].vect = vector_minus(t->lights.lts[s.i], s.l_vect[s.i].origin);
-		s.light_len = sqrt(vector_scalar(s.l_vect[s.i].vect, s.l_vect[s.i].vect));
-		s.l_vect[s.i].vect = vector_divide(s.l_vect[s.i].vect, s.light_len);
-		s.j = 0;
-		while (s.j < 4 && !t->shapes[s.j].f(t->shapes[s.j].data, s.l_vect[s.i], &its1[s.i]))
-			s.j++;
-		if (s.light_len < its1[s.i].t || its1[s.i].t < 0.0001 || s.j == 4)
-			shading_help(&s, constant_col, its);
-	}
-	s.tmp_r > 0xFF ? (s.col.struct_col.r = 0xFF) : (s.col.struct_col.r = s.tmp_r);
-	s.tmp_g > 0xFF ? (s.col.struct_col.g = 0xFF) : (s.col.struct_col.g = s.tmp_g);
-	s.tmp_b > 0xFF ? (s.col.struct_col.b = 0xFF) : (s.col.struct_col.b = s.tmp_b);
-	return (s.col);
-}
+// 	s.tmp_r = 0;
+// 	s.tmp_g = 0;
+// 	s.tmp_b = 0;
+// 	s.i = -1;
+// 	s.v_vect = vector_minus(t->camera.origin, its->ray_point);
+// 	normalize(&s.v_vect);
+// 	while (++s.i < t->lights.num_l)
+// 	{
+// 		s.l_vect[s.i].origin = its->ray_point;
+// 		s.l_vect[s.i].vect = vector_minus(t->lights.lts[s.i], s.l_vect[s.i].origin);
+// 		s.light_len = sqrt(vector_scalar(s.l_vect[s.i].vect, s.l_vect[s.i].vect));
+// 		s.l_vect[s.i].vect = vector_divide(s.l_vect[s.i].vect, s.light_len);
+// 		s.j = 0;
+// 		while (s.j < 4 && !t->shapes[s.j].f(t->shapes[s.j].data, s.l_vect[s.i], &its1[s.i]))
+// 			s.j++;
+// 		if (s.light_len < its1[s.i].t || its1[s.i].t < 0.0001 || s.j == 4)
+// 			shading_help(&s, constant_col, its);
+// 	}
+// 	s.tmp_r > 0xFF ? (s.col.struct_col.r = 0xFF) : (s.col.struct_col.r = s.tmp_r);
+// 	s.tmp_g > 0xFF ? (s.col.struct_col.g = 0xFF) : (s.col.struct_col.g = s.tmp_g);
+// 	s.tmp_b > 0xFF ? (s.col.struct_col.b = 0xFF) : (s.col.struct_col.b = s.tmp_b);
+// 	return (s.col);
+// }
 
 void	calculate_ray(t_iter it, t_ray *ray, t_thread *t)
 {
@@ -90,11 +90,13 @@ void	*create_ray(void *w)
 int		main(int argc, char **argv)
 {
 	int		fd;
+	t_cam	camera;
+	t_data	data;
 
 	if (argc != 2)
 		return (write(1, "Scene file needed!\n", 19));
 	fd = open(argv[1], O_RDONLY);
-	parser(fd);
+	parser(fd, &camera, &data);
 	// t_data		data;
 	// t_cam		camera;
 	// t_fig		sphere;
