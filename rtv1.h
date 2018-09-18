@@ -190,5 +190,6 @@ void			get_win_data(char **lines, t_data *data);
 void			get_camera_data(char **lines, t_cam *camera);
 t_l_lst			*get_lights(char **lines, t_l_lst *l, int i);
 double			ft_atod(char *str);
+t_sh_lst		*get_shapes(char **full_file, int num_lines, t_sh_lst *shapes, int i);
 
 #endif

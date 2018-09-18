@@ -180,5 +180,5 @@ int		main(int argc, char **argv)
 	// mlx_put_image_to_window(data.mlx_p, data.mlx_nw, data.mlx_img, 0, 0);
 	// mlx_loop(data.mlx_p);
 	
-	system("leaks RTv1");
+	// system("leaks RTv1");
 }

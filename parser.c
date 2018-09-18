@@ -43,99 +43,6 @@ static t_parce	read_file(int fd, t_parce res)
 	return (res);
 }
 
-t_fig		*struct_fig_create(char **lines, char *name)
-{
-	int		i;
-	t_fig	*fig_tmp;
-
-	i = -1;
-	if ((fig_tmp = (t_fig*)malloc(sizeof(t_fig))))
-	{
-		fig_tmp->name = name;
-		while (lines[++i] && lines[i][0] != '}')
-		{
-			if (!strcmp(&lines[i][1], ":centre:"))
-			{
-				fig_tmp->centre.x = ft_atod(&lines[i + 1][5]);
-				fig_tmp->centre.y = ft_atod(&lines[i + 2][5]);
-				fig_tmp->centre.z = ft_atod(&lines[i + 3][5]);
-				i += 3;
-			}
-			else if (!strcmp(&lines[i][1], ":normal:"))
-			{
-				fig_tmp->normal.x = ft_atod(&lines[i + 1][5]);
-				fig_tmp->normal.y = ft_atod(&lines[i + 2][5]);
-				fig_tmp->normal.z = ft_atod(&lines[i + 3][5]);
-				i += 3;
-			}
-			else if (!strcmp(&lines[i][1], ":direction:"))
-			{
-				fig_tmp->direction.x = ft_atod(&lines[i + 1][5]);
-				fig_tmp->direction.y = ft_atod(&lines[i + 2][5]);
-				fig_tmp->direction.z = ft_atod(&lines[i + 3][5]);
-				i += 3;
-			}
-			else if (!strcmp(&lines[i][1], ":radius:"))
-				fig_tmp->radius = ft_atod(&lines[i][9]);
-			else if (!strcmp(&lines[i][1], ":color:"))
-				fig_tmp->constant_col.integer = ft_atoi_base(&lines[i + 1][9], 16);
-			else if (!strcmp(&lines[i][1], ":angle:"))
-				fig_tmp->angle = ft_atod(&lines[i + 1][9]);
-		}
-	}
-	return (fig_tmp);
-}
-
-static t_sh_lst		*shapes_list_create(t_sh_lst *shapes, t_fig *fig_tmp,
-int (*funct)(t_fig *shape_type, t_ray ray, t_intersection *its))
-{
-	t_sh_lst *new;
-	t_sh_lst *temp;
-
-	new = NULL;
-	if (!shapes && (shapes = (t_sh_lst*)malloc(sizeof(t_sh_lst))))
-	{
-		shapes->data = (void*)fig_tmp;
-		shapes->f = funct;
-		shapes->next = NULL;
-	}
-	else if (shapes && (new = (t_sh_lst*)malloc(sizeof(t_sh_lst))))
-	{
-		new->data = (void*)fig_tmp;
-		new->f = funct;
-		new->next = NULL;
-		temp = shapes;
-		while (temp->next)
-			temp = temp->next;
-		temp->next = new;
-	}
-	return (shapes);
-}
-
-t_sh_lst	*get_shapes(char **full_file, int num_lines)
-{	
-	printf("\nhere\n");
-	t_sh_lst	*shapes;
-	int			i;
-
-	i = -1;
-	while (++i < num_lines)
-	{
-		if (full_file[i][0] == '{' && (++i))
-		{
-			if (!ft_strcmp(&full_file[i][1], "<sphere>") && (i++))
-				shapes = shapes_list_create(shapes, struct_fig_create(&full_file[i], "sphere"), &sphere_intersection);
-			else if (!ft_strcmp(&full_file[i][1], "<plane>") && (i++))
-				shapes = shapes_list_create(shapes, struct_fig_create(&full_file[i], "plane"), &plane_intersection);
-			else if (!ft_strcmp(&full_file[i][1], "<cylinder>") && (i++))
-				shapes = shapes_list_create(shapes, struct_fig_create(&full_file[i], "cylinder"), &cylinder_intersection);
-			else if (!ft_strcmp(&full_file[i][1], "<cone>") && (i++))
-				shapes = shapes_list_create(shapes, struct_fig_create(&full_file[i], "cone"), &cone_intersection);
-		}
-	}
-	return (shapes);
-}
-
 void		parser(int fd, t_cam *camera, t_data *data)
 {
 	t_parce		rf;
@@ -147,7 +54,8 @@ void		parser(int fd, t_cam *camera, t_data *data)
 	l = NULL;
 	rf = read_file(fd, rf);
 	i = -1;
-	while (++i < rf.num_lines)
+	shapes = NULL;
+	while (++i < rf.num_lines && !shapes)
 	{
 		if (rf.full_file[i][0] == '{' && (++i))
 		{
@@ -158,8 +66,22 @@ void		parser(int fd, t_cam *camera, t_data *data)
 			else if (!ft_strcmp(&rf.full_file[i][1], "<lights>") && (++i))
 				l = get_lights(&rf.full_file[i], l, -1);
 			else
-				shapes = get_shapes(&rf.full_file[i], rf.num_lines);
+				shapes = get_shapes(&rf.full_file[i - 1], rf.num_lines - i, shapes, -1);
 		}
+	}
+	t_sh_lst	*test = shapes;
+	while (test)
+	{
+		printf("%s\n", ((t_fig*)test->data)->name);
+		printf("%#x\n", ((t_fig*)test->data)->constant_col.integer);
+		test = test->next;
+	}
+	printf("\n");
+	t_l_lst *test1 = l;
+	while (test1)
+	{
+		printf("%f %f %f\n", test1->light_coord.x, test1->light_coord.y, test1->light_coord.z);
+		test1 = test1->next;
 	}
 	ft_double_free((void**)rf.full_file, 80);
 }
