@@ -114,18 +114,19 @@ typedef struct	s_iter
 	double			y_norm;
 }				t_iter;
 
-typedef	struct	s_shape
+typedef	struct	s_sh_lst
 {
 	void			*data;
 	int				(*f)(t_fig *shape_type,
 	t_ray ray, t_intersection *its);
-}				t_shape;
+	struct s_sh_lst	*next;
+}				t_sh_lst;
 
 typedef struct	s_thread
 {
 	int				current_y;
 	t_data			*win;
-	t_shape			*shapes;
+	t_sh_lst		*shapes;
 	t_l_lst			*lights;
 	t_cam			camera;
 }				t_thread;
@@ -156,6 +157,12 @@ typedef struct	s_cy
 	t_dot			delta_p;
 }				t_cy;
 
+typedef struct	s_parce
+{
+	char			**full_file;
+	int				num_lines;
+}				t_parce;
+
 int				key_react(int keycode, void *param);
 t_dot			vector_add(t_dot first, t_dot second);
 t_dot			vector_mult(t_dot first, double val);
@@ -170,7 +177,7 @@ int				sphere_intersection(t_fig *shape_type, t_ray ray, t_intersection *its);
 int				plane_intersection(t_fig *shape_type, t_ray ray, t_intersection *its);
 t_col			lambert_shading(t_col *constant_col, t_intersection *its);
 void			img_pixel_put(t_data *win, int x, int y, int col);
-void			deal_with_threads(t_data *win, t_cam camera, t_shape *shapes, t_l_lst *l);
+void			deal_with_threads(t_data *win, t_cam camera, t_sh_lst *shapes, t_l_lst *l);
 void			*create_ray(void *w);
 t_dot			vector_minus(t_dot first, t_dot second);
 t_col			get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t);
@@ -182,5 +189,6 @@ void			parser(int fd, t_cam *camera, t_data *data);
 void			get_win_data(char **lines, t_data *data);
 void			get_camera_data(char **lines, t_cam *camera);
 t_l_lst			*get_lights(char **lines, t_l_lst *l, int i);
+double			ft_atod(char *str);
 
 #endif

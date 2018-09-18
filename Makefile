@@ -22,7 +22,7 @@ MLX = ./minilibx_macos/libmlx.a
 MLX_PATH = ./minilibx_macos/
 
 SOURCE = main.c vector_operations.c vector_manipulate.c mlx_manipulations.c \
-shapes.c parser.c get_all_data.c
+shapes.c parser.c get_all_data.c get_shapes_data.c ft_atod.c
 
 O_FILES = $(SOURCE:.c=.o)
 
