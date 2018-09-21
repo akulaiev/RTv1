@@ -32,7 +32,7 @@ void			get_camera_data(char **lines, t_cam *camera)
 	int		i;
 
 	i = -1;
-	while (lines[++i]  && lines[i][0] != '}')
+	while (lines[++i] && lines[i][0] != '}')
 	{
 		if (!strncmp(&lines[i][1], ":origin:", 8))
 			i = t_dot_create(&camera->origin, i, lines);
@@ -45,7 +45,7 @@ void			get_camera_data(char **lines, t_cam *camera)
 	}
 }
 
-static t_l_lst		*lights_list_create(t_l_lst *l, t_dot tmp, t_data *data)
+static t_l_lst	*lights_list_create(t_l_lst *l, t_dot tmp, t_data *data)
 {
 	t_l_lst *new;
 	t_l_lst *temp;

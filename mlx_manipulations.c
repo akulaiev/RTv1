@@ -11,20 +11,19 @@
 /* ************************************************************************** */
 
 #include "rtv1.h"
-#include <stdio.h>
 
-int		key_react(int keycode, void *param)
+int			key_react(int keycode, void *param)
 {
 	param = NULL;
 	if (keycode == 53)
 	{
-		system("leaks RTv1");
+		// system("leaks RTv1");
 		exit(0);
 	}
 	return (0);
 }
 
-void	open_win(t_data *win)
+void		open_win(t_data *win)
 {
 	win->mlx_p = mlx_init();
 	win->mlx_nw = mlx_new_window(win->mlx_p, win->ww, win->wh, "Test");
@@ -34,7 +33,8 @@ void	open_win(t_data *win)
 	mlx_hook(win->mlx_nw, 2, 5, key_react, (void*)win);
 }
 
-void		deal_with_threads(t_data *win, t_cam camera, t_sh_lst *shapes, t_l_lst *l)
+void		deal_with_threads(t_data *win, t_cam camera,
+t_sh_lst *shapes, t_l_lst *l)
 {
 	int			j;
 	int			iter;

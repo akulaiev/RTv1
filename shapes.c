@@ -77,9 +77,11 @@ int		cylinder_intersection(t_fig *cy, t_ray ray, t_intersection *its)
 	{
 		its->t0 = (-c.b - sqrt(its->d)) / (2 * c.a);
 		its->t1 = (-c.b + sqrt(its->d)) / (2 * c.a);
-		if ((its->t0 > 0 && its->t1 > 0 && its->t0 < its->t1) || (its->t0 > 0 && its->t1 < 0))
+		if ((its->t0 > 0.00001 && its->t1 > 0.00001 &&
+		its->t0 < its->t1) || (its->t0 > 0.00001 && its->t1 < 0.00001))
 			its->t = its->t0;
-		else if ((its->t0 > 0 && its->t1 > 0 && its->t1 < its->t0) || (its->t1 > 0 && its->t0 < 0))
+		else if ((its->t0 > 0.00001 && its->t1 > 0.00001 && its->t1 < its->t0)
+		|| (its->t1 > 0.00001 && its->t0 < 0.00001))
 			its->t = its->t1;
 		return (1);
 	}

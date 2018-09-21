@@ -43,17 +43,15 @@ static t_parce	read_file(int fd, t_parce res)
 	return (res);
 }
 
-void		parser(int fd, t_cam *camera, t_data *data)
+void		parser(int fd, t_cam *camera, t_data *data, int i)
 {
 	t_parce		rf;
 	t_sh_lst	*shapes;
-	int			i;
 	t_l_lst		*l;
 
 	rf.full_file = NULL;
 	l = NULL;
 	rf = read_file(fd, rf);
-	i = -1;
 	shapes = NULL;
 	while (++i < rf.num_lines && !shapes)
 	{

@@ -52,6 +52,19 @@
 }
 
 {
+	<plane>
+	:centre:
+		x = -10;
+		y = 0;
+		z = 0;
+	:normal:
+		x = 10;
+		y = -10;
+		z = 0;
+	:color: 0x65f2df;
+}
+
+{
 	<cylinder>
 	:centre:
 		x = 3;
