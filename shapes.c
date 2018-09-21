@@ -73,18 +73,13 @@ int		cylinder_intersection(t_fig *cy, t_ray ray, t_intersection *its)
 	its->d = pow(c.b, 2) - 4 * c.a * c.c;
 	if (its->d < 0 || (c.a == 0 && c.b == 0))
 		return (0);
+	its->t0 = (-c.b - sqrt(its->d)) / (2 * c.a);
+	its->t1 = (-c.b + sqrt(its->d)) / (2 * c.a);
+	if (its->t0 > 0.00001 && its->t1 > 0.00001)
+		its->t = fmin(its->t0, its->t1);
 	else
-	{
-		its->t0 = (-c.b - sqrt(its->d)) / (2 * c.a);
-		its->t1 = (-c.b + sqrt(its->d)) / (2 * c.a);
-		if ((its->t0 > 0.00001 && its->t1 > 0.00001 &&
-		its->t0 < its->t1) || (its->t0 > 0.00001 && its->t1 < 0.00001))
-			its->t = its->t0;
-		else if ((its->t0 > 0.00001 && its->t1 > 0.00001 && its->t1 < its->t0)
-		|| (its->t1 > 0.00001 && its->t0 < 0.00001))
-			its->t = its->t1;
-		return (1);
-	}
+		its->t = fmax(its->t0, its->t1);
+	return (its->t > 0.00001);
 }
 
 int		cone_intersection(t_fig *co, t_ray ray, t_intersection *its)
@@ -101,11 +96,13 @@ int		cone_intersection(t_fig *co, t_ray ray, t_intersection *its)
 	c.c = pow(cos(co->angle), 2) * vector_scalar(c.tmp1, c.tmp1) - (co->radius * co->radius) -
 	pow(sin(co->angle), 2) * pow(vector_scalar(c.delta_p, co->direction), 2);
 	its->d = pow(c.b, 2) - 4 * c.a * c.c;
-	if (its->d < 0 || (c.a == 0 && c.b == 0) ||
-	((its->t = (-c.b - sqrt(its->d)) / (2.0 * c.a)) <= 0.00001 &&
-	(its->t = (-c.b + sqrt(its->d)) / (2.0 * c.a)) <= 0.00001))
+	if (its->d < 0 || (c.a == 0 && c.b == 0))
 		return (0);
-	return (1);
+	if (its->t0 > 0.00001 && its->t1 > 0.00001)
+		its->t = fmin(its->t0, its->t1);
+	else
+		its->t = fmax(its->t0, its->t1);
+	return (its->t > 0.00001);
 }
 
 int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
@@ -142,11 +139,11 @@ int		plane_intersection(t_fig *plane, t_ray ray, t_intersection *its)
 	t_dot			diff;
 
 	denom = vector_scalar(plane->normal, ray.vect);
-	if (fabs(denom) > 0.0001)
+	if (fabs(denom) > 0.00001)
 	{
 		diff = vector_add(plane->centre, vector_mult(ray.origin, -1));
 		its->t = vector_scalar(diff, plane->normal) / denom;
-		if (its->t > 0.0001)
+		if (its->t > 0.00001)
 			return (1);
 	}
 	return (0);

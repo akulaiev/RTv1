@@ -134,13 +134,12 @@ typedef struct	s_thread
 
 typedef struct	s_shd
 {
-	t_ray			*l_vect;
+	t_ray			l_vect;
 	t_dot			v_vect;
-	t_dot			*h_vect;
+	t_dot			h_vect;
 	t_col			col;
-	int				i;
-	double			*nl;
-	double			*hl;
+	double			nl;
+	double			hl;
 	int				tmp_r;
 	int				tmp_g;
 	int				tmp_b;
