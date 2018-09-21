@@ -37,26 +37,25 @@ t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t)
 	}
 	else if (!ft_strcmp(fig.name, "plane"))
 		its->normal = fig.normal;
-	t->current_y = 0;
-	return (fig.constant_col);
-	// return (blinn_phong_shading(&fig.constant_col, its, t));
+	return (blinn_phong_shading(&fig.constant_col, its, t));
 }
 
 int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
 {
-	int		i;
-	int		col;
+	int			col;
+	t_sh_lst	*temp;
 
-	i = -1;
 	its->closest_t = INFINITY;
 	col = 0;
-	while (++i < 4)
+	temp = t->shapes;
+	while (temp)
 	{
-		if (t->shapes[i].f(t->shapes[i].data, ray, its) && its->t < its->closest_t)
+		if (temp->f(temp->data, ray, its) && its->t < its->closest_t)
 		{
-			col = get_its_params((*(t_fig*)t->shapes[i].data), ray, its, t).integer;
+			col = get_its_params((*(t_fig*)temp->data), ray, its, t).integer;
 			its->closest_t = its->t;
 		}
+		temp = temp->next;
 	}
 	return (col);
 }

@@ -104,6 +104,7 @@ typedef struct	s_data
 	int				ww;
 	int				wh;
 	int				lines_per_th;
+	int				num_l;
 }				t_data;
 
 typedef struct	s_iter
@@ -133,18 +134,17 @@ typedef struct	s_thread
 
 typedef struct	s_shd
 {
-	t_ray			l_vect[2];
+	t_ray			*l_vect;
 	t_dot			v_vect;
-	t_dot			h_vect[2];
+	t_dot			*h_vect;
 	t_col			col;
 	int				i;
-	double			nl[2];
-	double			hl[2];
+	double			*nl;
+	double			*hl;
 	int				tmp_r;
 	int				tmp_g;
 	int				tmp_b;
-	int				j;
-	double			light_len;
+	double			*light_len;
 }				t_shd;
 
 typedef struct	s_cy
@@ -188,8 +188,9 @@ int				cone_intersection(t_fig *co, t_ray ray, t_intersection *its);
 void			parser(int fd, t_cam *camera, t_data *data);
 void			get_win_data(char **lines, t_data *data);
 void			get_camera_data(char **lines, t_cam *camera);
-t_l_lst			*get_lights(char **lines, t_l_lst *l, int i);
+t_l_lst			*get_lights(char **lines, t_l_lst *l, int i, t_data *data);
 double			ft_atod(char *str);
 t_sh_lst		*get_shapes(char **full_file, int num_lines, t_sh_lst *shapes, int i);
+int				t_dot_create(t_dot *vect, int i, char **lines);
 
 #endif

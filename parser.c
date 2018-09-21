@@ -64,24 +64,14 @@ void		parser(int fd, t_cam *camera, t_data *data)
 			else if (!ft_strcmp(&rf.full_file[i][1], "<camera>") && (++i))
 				get_camera_data(&rf.full_file[i], camera);
 			else if (!ft_strcmp(&rf.full_file[i][1], "<lights>") && (++i))
-				l = get_lights(&rf.full_file[i], l, -1);
+				l = get_lights(&rf.full_file[i], l, -1, data);
 			else
 				shapes = get_shapes(&rf.full_file[i - 1], rf.num_lines - i, shapes, -1);
 		}
 	}
-	t_sh_lst	*test = shapes;
-	while (test)
-	{
-		printf("%s\n", ((t_fig*)test->data)->name);
-		printf("%#x\n", ((t_fig*)test->data)->constant_col.integer);
-		test = test->next;
-	}
-	printf("\n");
-	t_l_lst *test1 = l;
-	while (test1)
-	{
-		printf("%f %f %f\n", test1->light_coord.x, test1->light_coord.y, test1->light_coord.z);
-		test1 = test1->next;
-	}
-	ft_double_free((void**)rf.full_file, 80);
+	open_win(data);
+	deal_with_threads(data, *camera, shapes, l);
+	mlx_put_image_to_window(data->mlx_p, data->mlx_nw, data->mlx_img, 0, 0);
+	mlx_loop(data->mlx_p);
+	ft_double_free((void**)rf.full_file, rf.num_lines);
 }
