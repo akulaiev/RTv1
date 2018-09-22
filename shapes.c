@@ -98,6 +98,8 @@ int		cone_intersection(t_fig *co, t_ray ray, t_intersection *its)
 	its->d = pow(c.b, 2) - 4 * c.a * c.c;
 	if (its->d < 0 || (c.a == 0 && c.b == 0))
 		return (0);
+	its->t0 = (-c.b - sqrt(its->d)) / (2 * c.a);
+	its->t1 = (-c.b + sqrt(its->d)) / (2 * c.a);
 	if (its->t0 > 0.00001 && its->t1 > 0.00001)
 		its->t = fmin(its->t0, its->t1);
 	else
@@ -125,11 +127,11 @@ int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
 		/ vector_scalar(ray.vect, ray.vect);
 		its->t1 = (vector_scalar(vector_mult(ray.vect, -1), e_min_c) - sqrt(its->d))
 		/ vector_scalar(ray.vect, ray.vect);
-		if ((its->t0 > 0 && its->t1 > 0 && its->t0 < its->t1) || (its->t0 > 0 && its->t1 < 0))
-			its->t = its->t0;
-		if ((its->t0 > 0 && its->t1 > 0 && its->t1 < its->t0) || (its->t1 > 0 && its->t0 < 0))
-			its->t = its->t1;
-		return (1);
+		if (its->t0 > 0.00001 && its->t1 > 0.00001)
+		its->t = fmin(its->t0, its->t1);
+		else
+			its->t = fmax(its->t0, its->t1);
+		return (its->t > 0.00001);
 	}
 }
 

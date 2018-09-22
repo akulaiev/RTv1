@@ -54,7 +54,7 @@
 {
 	<plane>
 	:centre:
-		x = -10;
+		x = 10;
 		y = 0;
 		z = 0;
 	:normal:
@@ -73,20 +73,6 @@
 	:direction:
 		x = 6;
 		y = 2;
-		z = -10;
-	:radius: 5;
-	:color: 0x4161f4;
-}
-
-{
-	<cylinder>
-	:centre:
-		x = 25;
-		y = 19;
-		z = 1;
-	:direction:
-		x = 0;
-		y = 0;
 		z = -10;
 	:radius: 5;
 	:color: 0x4161f4;

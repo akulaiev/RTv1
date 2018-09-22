@@ -25,17 +25,13 @@ static void	shading_help(t_shd *s, t_col *constant_col, t_intersection *its)
 	s->tmp_b += constant_col->struct_col.b * s->nl + 131 * s->hl;
 }
 
-static void	init(t_shd *s, int check, t_thread *t,
-t_intersection *its)
+static void	init(t_shd *s, t_thread *t, t_intersection *its)
 {
-	if (check)
-	{
-		s->v_vect = vector_minus(t->camera.origin, its->ray_point);
-		normalize(&s->v_vect);
-		s->tmp_r = 0;
-		s->tmp_g = 0;
-		s->tmp_b = 0;
-	}
+	s->v_vect = vector_minus(t->camera.origin, its->ray_point);
+	normalize(&s->v_vect);
+	s->tmp_r = 0;
+	s->tmp_g = 0;
+	s->tmp_b = 0;
 }
 
 static void	integer_to_col(t_shd *s)
@@ -63,7 +59,7 @@ t_intersection *its, t_thread *t)
 	t_sh_lst		*shape;
 
 	light = t->lights;
-	init(&s, t->win->num_l, t, its);
+	init(&s, t, its);
 	while (light)
 	{
 		s.l_vect.origin = its->ray_point;
@@ -73,7 +69,7 @@ t_intersection *its, t_thread *t)
 		s.l_vect.vect));
 		s.l_vect.vect = vector_divide(s.l_vect.vect, s.light_len);
 		shape = t->shapes;
-		its1.t = 2000;
+		its1.t = INFINITY;
 		while (shape && !shape->f(shape->data, s.l_vect, &its1))
 			shape = shape->next;
 		if (s.light_len < its1.t || its1.t < 0.00001 || !shape)
