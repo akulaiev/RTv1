@@ -86,12 +86,6 @@ typedef	struct	s_cam
 	t_base			basis;
 }				t_cam;
 
-typedef struct	s_l_lst
-{
-	t_dot			light_coord;
-	struct s_l_lst	*next;
-}				t_l_lst;
-
 typedef struct	s_data
 {
 	void			*mlx_p;
@@ -105,6 +99,7 @@ typedef struct	s_data
 	int				wh;
 	int				lines_per_th;
 	int				num_l;
+	int				num_shapes;
 }				t_data;
 
 typedef struct	s_iter
@@ -115,20 +110,19 @@ typedef struct	s_iter
 	double			y_norm;
 }				t_iter;
 
-typedef	struct	s_sh_lst
+typedef	struct	s_shape
 {
 	void			*data;
 	int				(*f)(t_fig *shape_type,
 	t_ray ray, t_intersection *its);
-	struct s_sh_lst	*next;
-}				t_sh_lst;
+}				t_shape;
 
 typedef struct	s_thread
 {
 	int				current_y;
 	t_data			*win;
-	t_sh_lst		*shapes;
-	t_l_lst			*lights;
+	t_shape			*shapes;
+	t_dot			*lights;
 	t_cam			camera;
 }				t_thread;
 
@@ -179,7 +173,7 @@ t_ray ray, t_intersection *its);
 t_col			lambert_shading(t_col *constant_col, t_intersection *its);
 void			img_pixel_put(t_data *win, int x, int y, int col);
 void			deal_with_threads(t_data *win, t_cam camera,
-t_sh_lst *shapes, t_l_lst *l);
+t_shape *shapes, t_dot *l);
 void			*create_ray(void *w);
 t_dot			vector_minus(t_dot first, t_dot second);
 t_col			get_its_params(t_fig fig, t_ray ray,
@@ -193,10 +187,10 @@ int				cone_intersection(t_fig *co, t_ray ray, t_intersection *its);
 void			parser(int fd, t_cam *camera, t_data *data, int i);
 void			get_win_data(char **lines, t_data *data);
 void			get_camera_data(char **lines, t_cam *camera);
-t_l_lst			*get_lights(char **lines, t_l_lst *l, int i, t_data *data);
+t_dot			*get_lights(char **lines, t_dot *l, int i, t_data *data);
 double			ft_atod(char *str);
-t_sh_lst		*get_shapes(char **full_file, int num_lines,
-t_sh_lst *shapes, int i);
+t_shape			*get_shapes(char **full_file, int num_lines,
+t_shape *shapes, t_data *data);
 int				t_dot_create(t_dot *vect, int i, char **lines);
 
 #endif

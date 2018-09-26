@@ -55,26 +55,29 @@ t_intersection *its, t_thread *t)
 {
 	t_shd			s;
 	t_intersection	its1;
-	t_l_lst			*light;
-	t_sh_lst		*shape;
+	t_dot			*light;
+	t_shape			*shape;
+	int				i;
+	int				j;
 
 	light = t->lights;
+	shape = t->shapes;
 	init(&s, t, its);
-	while (light)
+	i = -1;
+	while (++i < t->win->num_l)
 	{
 		s.l_vect.origin = its->ray_point;
-		s.l_vect.vect = vector_minus(light->light_coord,
+		s.l_vect.vect = vector_minus(light[i],
 		s.l_vect.origin);
 		s.light_len = sqrt(vector_scalar(s.l_vect.vect,
 		s.l_vect.vect));
 		s.l_vect.vect = vector_divide(s.l_vect.vect, s.light_len);
-		shape = t->shapes;
+		j = 0;
 		its1.t = INFINITY;
-		while (shape && !shape->f(shape->data, s.l_vect, &its1))
-			shape = shape->next;
-		if (s.light_len < its1.t || its1.t < 0.00001 || !shape)
+		while (j < t->win->num_shapes && !shape[j].f(shape->data, s.l_vect, &its1))
+			j++;
+		if (s.light_len < its1.t || its1.t < 0.00001 || j == t->win->num_shapes)
 			shading_help(&s, constant_col, its);
-		light = light->next;
 	}
 	integer_to_col(&s);
 	return (s.col);

@@ -43,19 +43,20 @@ t_col	get_its_params(t_fig fig, t_ray ray, t_intersection *its, t_thread *t)
 int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
 {
 	int			col;
-	t_sh_lst	*temp;
+	int			i;
+	t_shape		*temp;
 
 	its->closest_t = INFINITY;
 	col = 0;
 	temp = t->shapes;
-	while (temp)
+	i = -1;
+	while (++i < t->win->num_shapes)
 	{
-		if (temp->f(temp->data, ray, its) && its->t < its->closest_t)
+		if (temp[i].f(temp->data, ray, its) && its->t < its->closest_t)
 		{
 			col = get_its_params((*(t_fig*)temp->data), ray, its, t).integer;
 			its->closest_t = its->t;
 		}
-		temp = temp->next;
 	}
 	return (col);
 }

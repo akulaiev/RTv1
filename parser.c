@@ -46,8 +46,8 @@ static t_parce	read_file(int fd, t_parce res)
 void		parser(int fd, t_cam *camera, t_data *data, int i)
 {
 	t_parce		rf;
-	t_sh_lst	*shapes;
-	t_l_lst		*l;
+	t_shape		*shapes;
+	t_dot		*l;
 
 	rf.full_file = NULL;
 	l = NULL;
@@ -64,7 +64,7 @@ void		parser(int fd, t_cam *camera, t_data *data, int i)
 			else if (!ft_strcmp(&rf.full_file[i][1], "<lights>") && (++i))
 				l = get_lights(&rf.full_file[i], l, -1, data);
 			else
-				shapes = get_shapes(&rf.full_file[i - 1], rf.num_lines - i, shapes, -1);
+				shapes = get_shapes(&rf.full_file[i - 1], rf.num_lines - i, shapes, data);
 		}
 	}
 	open_win(data);

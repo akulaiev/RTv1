@@ -50,38 +50,44 @@ t_fig		*struct_fig_create(char **lines, char *name, int i)
 	return (fig_tmp);
 }
 
-static t_sh_lst		*shapes_list_create(t_sh_lst *shapes, t_fig *fig_tmp,
-int (*funct)(t_fig *shape_type, t_ray ray, t_intersection *its))
+static t_shape		*shapes_list_create(t_shape *shapes, t_fig *fig_tmp,
+int (*funct)(t_fig *shape_type, t_ray ray, t_intersection *its), t_data *data)
 {
-	t_sh_lst *new;
-	t_sh_lst *temp;
+	t_shape *new;
+	int		i;	
 
 	new = NULL;
-	if (!shapes && (shapes = (t_sh_lst*)malloc(sizeof(t_sh_lst))))
+	data->num_shapes++;
+	if (!shapes && (shapes = (t_shape*)malloc(sizeof(t_shape))))
 	{
-		shapes->data = (void*)fig_tmp;
-		shapes->f = funct;
-		shapes->next = NULL;
+		shapes[data->num_shapes - 1].data = (void*)fig_tmp;
+		shapes[data->num_shapes - 1].f = funct;
+		return (shapes);
 	}
-	else if (shapes && (new = (t_sh_lst*)malloc(sizeof(t_sh_lst))))
+	else if ((new = (t_shape*)malloc(sizeof(t_shape) * data->num_shapes)))
 	{
-		new->data = (void*)fig_tmp;
-		new->f = funct;
-		new->next = NULL;
-		temp = shapes;
-		while (temp->next)
-			temp = temp->next;
-		temp->next = new;
+		i = -1;
+		while (++i < data->num_shapes - 1)
+		{
+			new[i].data = shapes[i].data;
+			new[i].f = shapes[i].f;
+		}
+		new[i].data = (void*)fig_tmp;
+		new[i].f = funct;
+		free(shapes);
 	}
-	return (shapes);
+	return(new);
 }
 
-t_sh_lst	*get_shapes(char **full_file, int num_lines, t_sh_lst *shapes, int i)
+t_shape			*get_shapes(char **full_file, int num_lines, t_shape *shapes, t_data *data)
 {
 	int 		(*funct)(t_fig *shape_type, t_ray ray, t_intersection *its);
 	char		*name;
+	int			i;
 
 	name = NULL;
+	data->num_shapes = 0;
+	i = -1;
 	while (++i < num_lines)
 	{
 		if (full_file[i][0] == '{' && (++i))
@@ -98,7 +104,7 @@ t_sh_lst	*get_shapes(char **full_file, int num_lines, t_sh_lst *shapes, int i)
 			else if (!ft_strcmp(&full_file[i][1], "<cone>")
 			&& (name = ft_strdup("cone")))
 				funct = &cone_intersection;
-			shapes = shapes_list_create(shapes, struct_fig_create(&full_file[i], name, -1), funct);
+			shapes = shapes_list_create(shapes, struct_fig_create(&full_file[i], name, -1), funct, data);
 		}
 	}
 	return (shapes);

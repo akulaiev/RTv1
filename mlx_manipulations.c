@@ -34,7 +34,7 @@ void		open_win(t_data *win)
 }
 
 void		deal_with_threads(t_data *win, t_cam camera,
-t_sh_lst *shapes, t_l_lst *l)
+t_shape *shapes, t_dot *l)
 {
 	int			j;
 	int			iter;

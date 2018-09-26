@@ -45,31 +45,30 @@ void			get_camera_data(char **lines, t_cam *camera)
 	}
 }
 
-static t_l_lst	*lights_list_create(t_l_lst *l, t_dot tmp, t_data *data)
+static t_dot	*lights_list_create(t_dot *l, t_dot tmp, t_data *data)
 {
-	t_l_lst *new;
-	t_l_lst *temp;
+	t_dot	*new;
+	int		i;
 
 	new = NULL;
 	data->num_l++;
-	if (!l && (l = (t_l_lst*)malloc(sizeof(t_l_lst))))
+	if (!l && (l = (t_dot*)malloc(sizeof(t_dot))))
 	{
-		l->light_coord = tmp;
-		l->next = NULL;
+		l[data->num_l - 1] = tmp;
+		return (l);
 	}
-	else if (l && (new = (t_l_lst*)malloc(sizeof(t_l_lst))))
+	else if ((new = (t_dot*)malloc(sizeof(t_dot) * data->num_l)))
 	{
-		new->light_coord = tmp;
-		new->next = NULL;
-		temp = l;
-		while (temp->next)
-			temp = temp->next;
-		temp->next = new;
+		i = -1;
+		while (++i < data->num_l - 1)
+			new[i] = l[i];
+		new[i] = tmp;
+		free(l);
 	}
-	return (l);
+	return (new);
 }
 
-t_l_lst			*get_lights(char **lines, t_l_lst *l, int i, t_data *data)
+t_dot			*get_lights(char **lines, t_dot *l, int i, t_data *data)
 {
 	t_dot	tmp;
 
