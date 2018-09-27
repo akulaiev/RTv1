@@ -138,6 +138,8 @@ typedef struct	s_shd
 	int				tmp_g;
 	int				tmp_b;
 	double			light_len;
+	int				i;
+	int				j;
 }				t_shd;
 
 typedef struct	s_cy

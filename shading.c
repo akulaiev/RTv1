@@ -57,26 +57,24 @@ t_intersection *its, t_thread *t)
 	t_intersection	its1;
 	t_dot			*light;
 	t_shape			*shape;
-	int				i;
-	int				j;
 
 	light = t->lights;
 	shape = t->shapes;
 	init(&s, t, its);
-	i = -1;
-	while (++i < t->win->num_l)
+	s.i = -1;
+	s.l_vect.origin = its->ray_point;
+	while (++s.i < t->win->num_l)
 	{
-		s.l_vect.origin = its->ray_point;
-		s.l_vect.vect = vector_minus(light[i],
+		s.l_vect.vect = vector_minus(light[s.i],
 		s.l_vect.origin);
 		s.light_len = sqrt(vector_scalar(s.l_vect.vect,
 		s.l_vect.vect));
 		s.l_vect.vect = vector_divide(s.l_vect.vect, s.light_len);
-		j = 0;
+		s.j = 0;
 		its1.t = INFINITY;
-		while (j < t->win->num_shapes && !shape[j].f(shape->data, s.l_vect, &its1))
-			j++;
-		if (s.light_len < its1.t || its1.t < 0.00001 || j == t->win->num_shapes)
+		while (s.j < t->win->num_shapes && !shape[s.j].f(shape[s.j].data, s.l_vect, &its1))
+			s.j++;
+		if (s.light_len < its1.t || its1.t < 0.00001 || s.j == t->win->num_shapes)
 			shading_help(&s, constant_col, its);
 	}
 	integer_to_col(&s);

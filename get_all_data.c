@@ -13,17 +13,37 @@
 #include "rtv1.h"
 #include <stdio.h>
 
+int				check_format(char **l)
+{
+	int		i;
+
+	i = -1;
+	while (l[++i] && l[i][0] != '}')
+	{
+		if (!strncmp(&l[i][1], ":width:", 7) &&
+		(l[i][8] != ' ' || !ft_isdigit(l[i][9])))
+			exit(write(2, "Error with source file format!\n", 31));
+		else if (!strncmp(&l[i][1], ":height:", 8) &&
+		(l[i][9] != ' ' || !ft_isdigit(l[i][10])))
+			exit(write(2, "Error with source file format!\n", 31));
+	}
+	return (1);
+}
+
 void			get_win_data(char **lines, t_data *data)
 {
 	int		i;
 
 	i = -1;
-	while (lines[++i] && lines[i][0] != '}')
+	if (check_format(lines))
 	{
-		if (!strncmp(&lines[i][1], ":width:", 7))
-			data->ww = ft_atod(&lines[i][8]);
-		else if (!strncmp(&lines[i][1], ":height:", 8))
-			data->wh = ft_atod(&lines[i][9]);
+		while (lines[++i] && lines[i][0] != '}')
+		{
+			if (!strncmp(&lines[i][1], ":width:", 7))
+				data->ww = ft_atod(&lines[i][8]);
+			else if (!strncmp(&lines[i][1], ":height:", 8))
+				data->wh = ft_atod(&lines[i][9]);
+		}
 	}
 }
 

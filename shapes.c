@@ -52,9 +52,9 @@ int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
 	i = -1;
 	while (++i < t->win->num_shapes)
 	{
-		if (temp[i].f(temp->data, ray, its) && its->t < its->closest_t)
+		if (temp[i].f(temp[i].data, ray, its) && its->t < its->closest_t)
 		{
-			col = get_its_params((*(t_fig*)temp->data), ray, its, t).integer;
+			col = get_its_params((*(t_fig*)temp[i].data), ray, its, t).integer;
 			its->closest_t = its->t;
 		}
 	}
