@@ -15,9 +15,9 @@
 
 static void	shading_help(t_shd *s, t_col *constant_col, t_intersection *its)
 {
-	s->h_vect = vector_add(s->l_vect.vect, s->v_vect);
+	s->h_vect = vector_add(s->l.vect, s->v_vect);
 	normalize(&s->h_vect);
-	s->nl = fmax(0, vector_scalar(its->normal, s->l_vect.vect));
+	s->nl = fmax(0, vector_scalar(its->normal, s->l.vect));
 	s->hl = fmax(0,
 	pow(vector_scalar(its->normal, s->h_vect), 100));
 	s->tmp_r += constant_col->struct_col.r * s->nl + 131 * s->hl;
@@ -62,19 +62,24 @@ t_intersection *its, t_thread *t)
 	shape = t->shapes;
 	init(&s, t, its);
 	s.i = -1;
-	s.l_vect.origin = its->ray_point;
+	s.l.origin = its->ray_point;
 	while (++s.i < t->win->num_l)
 	{
-		s.l_vect.vect = vector_minus(light[s.i],
-		s.l_vect.origin);
-		s.light_len = sqrt(vector_scalar(s.l_vect.vect,
-		s.l_vect.vect));
-		s.l_vect.vect = vector_divide(s.l_vect.vect, s.light_len);
+		s.l.vect = vector_minus(light[s.i],
+		s.l.origin);
+		s.light_len = sqrt(vector_scalar(s.l.vect,
+		s.l.vect));
+		s.l.vect = vector_divide(s.l.vect, s.light_len);
 		s.j = 0;
-		its1.t = INFINITY;
-		while (s.j < t->win->num_shapes && !shape[s.j].f(shape[s.j].data, s.l_vect, &its1))
-			s.j++;
-		if (s.light_len < its1.t || its1.t < 0.00001 || s.j == t->win->num_shapes)
+		while (s.j < t->win->num_shapes)
+		{
+			if (!shape[s.j].f(shape[s.j].data, s.l, &its1) ||
+			s.light_len < its1.t || its1.t < 0.00001)
+				s.j++;
+			else
+				break;
+		}
+		if (s.j == t->win->num_shapes)
 			shading_help(&s, constant_col, its);
 	}
 	integer_to_col(&s);

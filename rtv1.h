@@ -128,7 +128,7 @@ typedef struct	s_thread
 
 typedef struct	s_shd
 {
-	t_ray			l_vect;
+	t_ray			l;
 	t_dot			v_vect;
 	t_dot			h_vect;
 	t_col			col;
