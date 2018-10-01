@@ -1,0 +1,97 @@
+{
+	<window>
+	:width: 950;
+	:height: 950;
+}
+
+{
+	<camera>
+	:origin:
+		x = 5;
+		y = -20;
+		z = 10;
+	:direction:
+		x = -1;
+		y = 5;
+		z = -1;
+}
+
+{
+	<lights>
+	:first:
+		x = 3;
+		y = -7;
+		z = 7;
+	:second:
+		x = -5;
+		y = -6;
+		z = 1;
+	:third:
+		x = 0;
+		y = 0;
+		z = 0;
+}
+
+{
+	<sphere>
+	:centre:
+		x = -2;
+		y = -3;
+		z = 3;
+	:radius: 3;
+	:color: 0x42f489;
+}
+
+{
+	<plane>
+	:centre:
+		x = 3;
+		y = 0;
+		z = 0;
+	:normal:
+		x = 0;
+		y = 0;
+		z = 10;
+	:color: 0xcccecc;
+}
+
+{
+	<plane>
+	:centre:
+		x = -10;
+		y = 0;
+		z = 0;
+	:normal:
+		x = 10;
+		y = -10;
+		z = 0;
+	:color: 0x65f2df;
+}
+
+{
+	<cylinder>
+	:centre:
+		x = 3;
+		y = 7;
+		z = 1;
+	:direction:
+		x = 6;
+		y = 2;
+		z = -10;
+	:radius: 5;
+	:color: 0x4161f4;
+}
+
+{
+	<cone>
+	:centre:
+		x = 5;
+		y = 1;
+		z = 1;
+	:direction:
+		x = -5;
+		y = 1;
+		z = -9;
+	:angle: 0.25;
+	:color: 0xf441a6;
+}

@@ -35,9 +35,9 @@ void			get_win_data(char **lines, t_data *data)
 	data->wh = 0;
 	while (lines[++i] && lines[i][0] != '}')
 	{
-		if (!strncmp(&lines[i][1], ":width:", 7))
+		if (!strncmp(&lines[i][1], ":width:", 7) && lines[i][0] == '\t')
 			data->ww = ft_atod(&lines[i][8]);
-		else if (!strncmp(&lines[i][1], ":height:", 8))
+		else if (!strncmp(&lines[i][1], ":height:", 8) && lines[i][0] == '\t')
 			data->wh = ft_atod(&lines[i][9]);
 		else
 			exit(write(2, "Problem with source file!\n", 26));
@@ -55,9 +55,10 @@ void			get_camera_data(char **lines, t_cam *camera)
 	camera->basis.dir_vect.x = INFINITY;
 	while (lines[++i] && lines[i][0] != '}')
 	{
-		if (!strncmp(&lines[i][1], ":origin:", 8))
+		if (!strncmp(&lines[i][1], ":origin:", 8) && lines[i][0] == '\t')
 			i = tdc(&camera->origin, i, lines);
-		else if (!strncmp(&lines[i][1], ":direction:", 11))
+		else if (!strncmp(&lines[i][1], ":direction:", 11) &&
+		lines[i][0] == '\t')
 		{
 			i = tdc(&camera->basis.dir_vect, i, lines);
 			normalize(&camera->basis.dir_vect);
@@ -101,8 +102,10 @@ t_dot			*get_lights(char **lines, int i, t_data *data)
 	l = NULL;
 	while (lines[++i] && lines[i][0] != '}')
 	{
-		if (lines[i][1] == ':')
+		if (lines[i][1] == ':' && lines[i][0] == '\t')
 			i = tdc(&tmp, i, lines);
+		else
+			exit(write(2, "Problem with source file!\n", 26));
 		l = lights_list_create(l, tmp, data);
 	}
 	return (l);

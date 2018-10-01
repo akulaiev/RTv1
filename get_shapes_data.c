@@ -15,19 +15,19 @@
 
 static int			struct_fig_create_help(char **l, int i, t_fig *f)
 {
-	if (!ft_strcmp(&l[i][1], ":centre:"))
+	if (l[i][0] == '\t' && !ft_strcmp(&l[i][1], ":centre:"))
 		i = tdc(&f->centre, i, l);
-	else if (!ft_strcmp(&l[i][1], ":normal:") &&
+	else if (l[i][0] == '\t' && !ft_strcmp(&l[i][1], ":normal:") &&
 	(i = tdc(&f->normal, i, l)))
 		normalize(&f->normal);
-	else if (!ft_strcmp(&l[i][1], ":direction:") &&
+	else if (l[i][0] == '\t' && !ft_strcmp(&l[i][1], ":direction:") &&
 	(i = tdc(&f->direction, i, l)))
 		normalize(&f->direction);
-	else if (!ft_strncmp(&l[i][1], ":radius:", 8))
+	else if (l[i][0] == '\t' && !ft_strncmp(&l[i][1], ":radius:", 8))
 		f->radius = ft_atod(&l[i][9]);
-	else if (!ft_strncmp(&l[i][1], ":color:", 7))
+	else if (l[i][0] == '\t' && !ft_strncmp(&l[i][1], ":color:", 7))
 		f->constant_col.integer = ft_atoi_base(&l[i][11], 16);
-	else if (!ft_strncmp(&l[i][1], ":angle:", 7))
+	else if (l[i][0] == '\t' && !ft_strncmp(&l[i][1], ":angle:", 7))
 		f->angle = ft_atod(&l[i][9]);
 	else
 	{
@@ -95,19 +95,19 @@ int (*funct)(t_fig *shape_type, t_ray ray, t_intersection *its), t_data *data)
 	return (new);
 }
 
-static void			get_shapes_help(char **full_file, int i, char **name,
+static void			get_shapes_help(char **f, int i, char **name,
 int (**funct)(t_fig *shape_type, t_ray ray, t_intersection *its))
 {
-	if (!ft_strcmp(&full_file[i][1], "<sphere>")
+	if (f[i][0] == '\t' && !ft_strcmp(&f[i][1], "<sphere>")
 	&& (*name = ft_strdup("sphere")))
 		*funct = &sphere_intersection;
-	else if (!ft_strcmp(&full_file[i][1], "<plane>")
+	else if (f[i][0] == '\t' && !ft_strcmp(&f[i][1], "<plane>")
 	&& (*name = ft_strdup("plane")))
 		*funct = &plane_intersection;
-	else if (!ft_strcmp(&full_file[i][1], "<cylinder>")
+	else if (f[i][0] == '\t' && !ft_strcmp(&f[i][1], "<cylinder>")
 	&& (*name = ft_strdup("cylinder")))
 		*funct = &cylinder_intersection;
-	else if (!ft_strcmp(&full_file[i][1], "<cone>")
+	else if (f[i][0] == '\t' && !ft_strcmp(&f[i][1], "<cone>")
 	&& (*name = ft_strdup("cone")))
 		*funct = &cone_intersection;
 	else

@@ -53,14 +53,19 @@ t_dot **l, t_parce rf)
 	{
 		if (rf.f[i][0] == '{' && (++i))
 		{
-			if (!ft_strcmp(&rf.f[i][1], "<window>") && (++i))
-				get_win_data(&rf.f[i], data);
-			else if (!ft_strcmp(&rf.f[i][1], "<camera>") && (++i))
-				get_camera_data(&rf.f[i], *camera);
-			else if (!ft_strcmp(&rf.f[i][1], "<lights>") && (++i))
-				*l = get_lights(&rf.f[i], -1, data);
+			if (rf.f[i][0] == '\t')
+			{
+				if (!ft_strcmp(&rf.f[i][1], "<window>") && (++i))
+					get_win_data(&rf.f[i], data);
+				else if (!ft_strcmp(&rf.f[i][1], "<camera>") && (++i))
+					get_camera_data(&rf.f[i], *camera);
+				else if (!ft_strcmp(&rf.f[i][1], "<lights>") && (++i))
+					*l = get_lights(&rf.f[i], -1, data);
+				else
+					return (get_shapes(&rf.f[i - 1], rf.num_lines - i, data));
+			}
 			else
-				return (get_shapes(&rf.f[i - 1], rf.num_lines - i, data));
+				exit(write(2, "Problem with source file!\n", 26));
 		}
 	}
 	return (NULL);

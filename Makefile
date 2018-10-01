@@ -42,7 +42,7 @@ LIBS:
 	$(CC) $(HEADER) $(CFLAGS) $(SOURCE) -c $<
 
 exe:
-	./$(NAME) scene.rtv
+	./$(NAME) full_scene.rtv
 
 clean:
 	make -C $(LIBFT_PATH) clean
