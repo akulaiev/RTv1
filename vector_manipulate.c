@@ -30,17 +30,17 @@ t_base	get_basis(t_dot vect)
 	tmp.x = vect.x;
 	tmp.y = vect.y + 0.0001;
 	tmp.z = vect.z + 0.0002;
-	res.right_vect = vector_cross(vect, tmp);
+	res.right_vect = vc(vect, tmp);
 	normalize(&res.right_vect);
-	res.up_vect = vector_cross(vect, res.right_vect);
+	res.up_vect = vc(vect, res.right_vect);
 	normalize(&res.up_vect);
-	res.right_vect = vector_cross(vect, res.up_vect);
+	res.right_vect = vc(vect, res.up_vect);
 	normalize(&res.right_vect);
 	res.dir_vect = vect;
 	return (res);
 }
 
-t_dot	vector_minus(t_dot first, t_dot second)
+t_dot	vmn(t_dot first, t_dot second)
 {
 	t_dot	res;
 

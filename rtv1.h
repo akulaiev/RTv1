@@ -154,16 +154,16 @@ typedef struct	s_cy
 
 typedef struct	s_parce
 {
-	char			**full_file;
+	char			**f;
 	int				num_lines;
 }				t_parce;
 
 int				key_react(int keycode, void *param);
-t_dot			vector_add(t_dot first, t_dot second);
-t_dot			vector_mult(t_dot first, double val);
-t_dot			vector_divide(t_dot first, double val);
-double			vector_scalar(t_dot first, t_dot second);
-t_dot			vector_cross(t_dot first, t_dot second);
+t_dot			va(t_dot first, t_dot second);
+t_dot			vm(t_dot first, double val);
+t_dot			vd(t_dot first, double val);
+double			vs(t_dot first, t_dot second);
+t_dot			vc(t_dot first, t_dot second);
 void			normalize(t_dot *ray);
 t_base			get_basis(t_dot vect);
 int				key_react(int keycode, void *param);
@@ -177,7 +177,7 @@ void			img_pixel_put(t_data *win, int x, int y, int col);
 void			deal_with_threads(t_data *win, t_cam camera,
 t_shape *shapes, t_dot *l);
 void			*create_ray(void *w);
-t_dot			vector_minus(t_dot first, t_dot second);
+t_dot			vmn(t_dot first, t_dot second);
 t_col			get_its_params(t_fig fig, t_ray ray,
 t_intersection *its, t_thread *t);
 int				get_closest_shape(t_thread *t, t_ray ray, t_intersection *its);
@@ -186,13 +186,13 @@ t_intersection *its, t_thread *t);
 int				cylinder_intersection(t_fig *cylinder,
 t_ray ray, t_intersection *its);
 int				cone_intersection(t_fig *co, t_ray ray, t_intersection *its);
-void			parser(int fd, t_cam *camera, t_data *data, int i);
+void			parser(int fd, t_cam *camera, t_data *data);
 void			get_win_data(char **lines, t_data *data);
 void			get_camera_data(char **lines, t_cam *camera);
-t_dot			*get_lights(char **lines, t_dot *l, int i, t_data *data);
+t_dot			*get_lights(char **lines, int i, t_data *data);
 double			ft_atod(char *str);
 t_shape			*get_shapes(char **full_file, int num_lines,
-t_shape *shapes, t_data *data);
-int				t_dot_create(t_dot *vect, int i, char **lines);
+t_data *data);
+int				tdc(t_dot *vect, int i, char **lines);
 
 #endif

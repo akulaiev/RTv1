@@ -12,7 +12,7 @@
 
 #include "rtv1.h"
 
-t_dot	vector_add(t_dot first, t_dot second)
+t_dot	va(t_dot first, t_dot second)
 {
 	t_dot	res;
 
@@ -22,7 +22,7 @@ t_dot	vector_add(t_dot first, t_dot second)
 	return (res);
 }
 
-t_dot	vector_mult(t_dot first, double val)
+t_dot	vm(t_dot first, double val)
 {
 	t_dot	res;
 
@@ -32,7 +32,7 @@ t_dot	vector_mult(t_dot first, double val)
 	return (res);
 }
 
-t_dot	vector_divide(t_dot first, double val)
+t_dot	vd(t_dot first, double val)
 {
 	t_dot	res;
 
@@ -42,7 +42,7 @@ t_dot	vector_divide(t_dot first, double val)
 	return (res);
 }
 
-double	vector_scalar(t_dot first, t_dot second) 
+double	vs(t_dot first, t_dot second)
 {
 	double	res;
 
@@ -50,7 +50,7 @@ double	vector_scalar(t_dot first, t_dot second)
 	return (res);
 }
 
-t_dot	vector_cross(t_dot first, t_dot second)
+t_dot	vc(t_dot first, t_dot second)
 {
 	t_dot	res;
 

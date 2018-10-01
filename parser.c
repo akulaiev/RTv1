@@ -36,40 +36,56 @@ static t_parce	read_file(int fd, t_parce res)
 	res.num_lines = 0;
 	while (get_next_line(fd, &tmp_line))
 	{
-		res.full_file = ft_realloc_2d(res.full_file, res.num_lines);
-		res.full_file[res.num_lines] = tmp_line;
+		res.f = ft_realloc_2d(res.f, res.num_lines);
+		res.f[res.num_lines] = tmp_line;
 		res.num_lines++;
 	}
 	return (res);
 }
 
-void		parser(int fd, t_cam *camera, t_data *data, int i)
+t_shape			*parser_help(t_cam **camera, t_data *data,
+t_dot **l, t_parce rf)
+{
+	int		i;
+
+	i = -1;
+	while (++i < rf.num_lines)
+	{
+		if (rf.f[i][0] == '{' && (++i))
+		{
+			if (!ft_strcmp(&rf.f[i][1], "<window>") && (++i))
+				get_win_data(&rf.f[i], data);
+			else if (!ft_strcmp(&rf.f[i][1], "<camera>") && (++i))
+				get_camera_data(&rf.f[i], *camera);
+			else if (!ft_strcmp(&rf.f[i][1], "<lights>") && (++i))
+				*l = get_lights(&rf.f[i], -1, data);
+			else
+				return (get_shapes(&rf.f[i - 1], rf.num_lines - i, data));
+		}
+	}
+	return (NULL);
+}
+
+void			parser(int fd, t_cam *camera, t_data *data)
 {
 	t_parce		rf;
 	t_shape		*shapes;
 	t_dot		*l;
 
-	rf.full_file = NULL;
+	rf.f = NULL;
 	l = NULL;
 	rf = read_file(fd, rf);
-	shapes = NULL;
-	while (++i < rf.num_lines && !shapes)
-	{
-		if (rf.full_file[i][0] == '{' && (++i))
-		{
-			if (!ft_strcmp(&rf.full_file[i][1], "<window>") && (++i))
-				get_win_data(&rf.full_file[i], data);
-			else if (!ft_strcmp(&rf.full_file[i][1], "<camera>") && (++i))
-				get_camera_data(&rf.full_file[i], camera);
-			else if (!ft_strcmp(&rf.full_file[i][1], "<lights>") && (++i))
-				l = get_lights(&rf.full_file[i], l, -1, data);
-			else
-				shapes = get_shapes(&rf.full_file[i - 1], rf.num_lines - i, shapes, data);
-		}
-	}
+	data->ww = 0;
+	data->wh = 0;
+	camera->origin.x = INFINITY;
+	camera->basis.dir_vect.x = INFINITY;
+	shapes = parser_help(&camera, data, &l, rf);
+	if (!data->num_l || !data->num_shapes || !data->ww || !data->wh ||
+	camera->origin.x == INFINITY || camera->basis.dir_vect.x == INFINITY)
+		exit(write(2, "Problem with source file!\n", 26));
 	open_win(data);
 	deal_with_threads(data, *camera, shapes, l);
 	mlx_put_image_to_window(data->mlx_p, data->mlx_nw, data->mlx_img, 0, 0);
 	mlx_loop(data->mlx_p);
-	ft_double_free((void**)rf.full_file, rf.num_lines);
+	ft_double_free((void**)rf.f, rf.num_lines);
 }

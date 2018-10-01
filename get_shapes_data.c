@@ -13,48 +13,64 @@
 #include "rtv1.h"
 #include <stdio.h>
 
-int		t_dot_create(t_dot *vect, int i, char **lines)
+static int			struct_fig_create_help(char **l, int i, t_fig *f)
 {
-	vect->x = ft_atod(&lines[i + 1][5]);
-	vect->y = ft_atod(&lines[i + 2][5]);
-	vect->z = ft_atod(&lines[i + 3][5]);
-	i += 3;
+	if (!ft_strcmp(&l[i][1], ":centre:"))
+		i = tdc(&f->centre, i, l);
+	else if (!ft_strcmp(&l[i][1], ":normal:") &&
+	(i = tdc(&f->normal, i, l)))
+		normalize(&f->normal);
+	else if (!ft_strcmp(&l[i][1], ":direction:") &&
+	(i = tdc(&f->direction, i, l)))
+		normalize(&f->direction);
+	else if (!ft_strncmp(&l[i][1], ":radius:", 8))
+		f->radius = ft_atod(&l[i][9]);
+	else if (!ft_strncmp(&l[i][1], ":color:", 7))
+		f->constant_col.integer = ft_atoi_base(&l[i][11], 16);
+	else if (!ft_strncmp(&l[i][1], ":angle:", 7))
+		f->angle = ft_atod(&l[i][9]);
+	else
+	{
+		free(f);
+		exit(write(2, "Problem with source file!\n", 26));
+	}
 	return (i);
 }
 
-t_fig		*struct_fig_create(char **lines, char *name, int i)
+static t_fig		*struct_fig_create(char **l, char *name, int i)
 {
-	t_fig	*fig_tmp;
+	t_fig	*f;
 
-	if ((fig_tmp = (t_fig*)malloc(sizeof(t_fig))))
+	if ((f = (t_fig*)malloc(sizeof(t_fig))))
 	{
-		fig_tmp->name = name;
-		while (lines[++i] && lines[i][0] != '}')
-		{
-			if (!strcmp(&lines[i][1], ":centre:"))
-				i = t_dot_create(&fig_tmp->centre, i, lines);
-			else if (!strcmp(&lines[i][1], ":normal:") &&
-			(i = t_dot_create(&fig_tmp->normal, i, lines)))
-				normalize(&fig_tmp->normal);
-			else if (!strcmp(&lines[i][1], ":direction:") &&
-			(i = t_dot_create(&fig_tmp->direction, i, lines)))
-				normalize(&fig_tmp->direction);
-			else if (!strncmp(&lines[i][1], ":radius:", 8))
-				fig_tmp->radius = ft_atod(&lines[i][9]);
-			else if (!strncmp(&lines[i][1], ":color:", 7))
-				fig_tmp->constant_col.integer = ft_atoi_base(&lines[i][11], 16);
-			else if (!strncmp(&lines[i][1], ":angle:", 7))
-				fig_tmp->angle = ft_atod(&lines[i][9]);
-		}
+		f->angle = 0;
+		f->radius = 0;
+		f->constant_col.integer = 0;
+		f->name = name;
+		f->centre.x = INFINITY;
+		f->normal.x = INFINITY;
+		f->direction.x = INFINITY;
+		while (l[++i] && l[i][0] != '}')
+			i = struct_fig_create_help(l, i, f);
 	}
-	return (fig_tmp);
+	if (!f->constant_col.integer || f->centre.x == INFINITY ||
+	(!ft_strcmp(name, "cone") && !f->angle) || ((!ft_strcmp(name, "cylinder")
+	|| !ft_strcmp(name, "sphere")) && !f->radius) ||
+	((!ft_strcmp(name, "cylinder") || !ft_strcmp(name, "cone"))
+	&& f->direction.x == INFINITY) ||
+	(!ft_strcmp(name, "plane") && f->normal.x == INFINITY))
+	{
+		free(f);
+		exit(write(2, "Problem with source file!\n", 26));
+	}
+	return (f);
 }
 
 static t_shape		*shapes_list_create(t_shape *shapes, t_fig *fig_tmp,
 int (*funct)(t_fig *shape_type, t_ray ray, t_intersection *its), t_data *data)
 {
 	t_shape *new;
-	int		i;	
+	int		i;
 
 	new = NULL;
 	data->num_shapes++;
@@ -76,35 +92,47 @@ int (*funct)(t_fig *shape_type, t_ray ray, t_intersection *its), t_data *data)
 		new[i].f = funct;
 		free(shapes);
 	}
-	return(new);
+	return (new);
 }
 
-t_shape			*get_shapes(char **full_file, int num_lines, t_shape *shapes, t_data *data)
+static void			get_shapes_help(char **full_file, int i, char **name,
+int (**funct)(t_fig *shape_type, t_ray ray, t_intersection *its))
 {
-	int 		(*funct)(t_fig *shape_type, t_ray ray, t_intersection *its);
+	if (!ft_strcmp(&full_file[i][1], "<sphere>")
+	&& (*name = ft_strdup("sphere")))
+		*funct = &sphere_intersection;
+	else if (!ft_strcmp(&full_file[i][1], "<plane>")
+	&& (*name = ft_strdup("plane")))
+		*funct = &plane_intersection;
+	else if (!ft_strcmp(&full_file[i][1], "<cylinder>")
+	&& (*name = ft_strdup("cylinder")))
+		*funct = &cylinder_intersection;
+	else if (!ft_strcmp(&full_file[i][1], "<cone>")
+	&& (*name = ft_strdup("cone")))
+		*funct = &cone_intersection;
+	else
+		exit(write(2, "Problem with source file!\n", 26));
+}
+
+t_shape				*get_shapes(char **full_file, int num_lines,
+t_data *data)
+{
+	int			(*funct)(t_fig *shape_type, t_ray ray, t_intersection *its);
 	char		*name;
 	int			i;
+	t_shape		*shapes;
 
 	name = NULL;
-	data->num_shapes = 0;
+	funct = NULL;
+	shapes = NULL;
 	i = -1;
 	while (++i < num_lines)
 	{
 		if (full_file[i][0] == '{' && (++i))
 		{
-			if (!ft_strcmp(&full_file[i][1], "<sphere>")
-			&& (name = ft_strdup("sphere")))
-				funct = &sphere_intersection;
-			else if (!ft_strcmp(&full_file[i][1], "<plane>")
-			&& (name = ft_strdup("plane")))
-				funct = &plane_intersection;
-			else if (!ft_strcmp(&full_file[i][1], "<cylinder>")
-			&& (name = ft_strdup("cylinder")))
-				funct = &cylinder_intersection;
-			else if (!ft_strcmp(&full_file[i][1], "<cone>")
-			&& (name = ft_strdup("cone")))
-				funct = &cone_intersection;
-			shapes = shapes_list_create(shapes, struct_fig_create(&full_file[i], name, -1), funct, data);
+			get_shapes_help(full_file, i, &name, &funct);
+			shapes = shapes_list_create(shapes,
+			struct_fig_create(&full_file[i], name, 0), funct, data);
 		}
 	}
 	return (shapes);

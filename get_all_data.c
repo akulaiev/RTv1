@@ -13,21 +13,17 @@
 #include "rtv1.h"
 #include <stdio.h>
 
-int				check_format(char **l)
+int				tdc(t_dot *vect, int i, char **lines)
 {
-	int		i;
-
-	i = -1;
-	while (l[++i] && l[i][0] != '}')
-	{
-		if (!strncmp(&l[i][1], ":width:", 7) &&
-		(l[i][8] != ' ' || !ft_isdigit(l[i][9])))
-			exit(write(2, "Error with source file format!\n", 31));
-		else if (!strncmp(&l[i][1], ":height:", 8) &&
-		(l[i][9] != ' ' || !ft_isdigit(l[i][10])))
-			exit(write(2, "Error with source file format!\n", 31));
-	}
-	return (1);
+	if ((!ft_isdigit(lines[i + 1][6]) && lines[i + 1][6] != '-') ||
+	(lines[i + 1][2] != 'x' || lines[i + 2][2] != 'y' ||
+	lines[i + 3][2] != 'z'))
+		exit(write(2, "Problem with source file!\n", 26));
+	vect->x = ft_atod(&lines[i + 1][5]);
+	vect->y = ft_atod(&lines[i + 2][5]);
+	vect->z = ft_atod(&lines[i + 3][5]);
+	i += 3;
+	return (i);
 }
 
 void			get_win_data(char **lines, t_data *data)
@@ -35,16 +31,19 @@ void			get_win_data(char **lines, t_data *data)
 	int		i;
 
 	i = -1;
-	if (check_format(lines))
+	data->ww = 0;
+	data->wh = 0;
+	while (lines[++i] && lines[i][0] != '}')
 	{
-		while (lines[++i] && lines[i][0] != '}')
-		{
-			if (!strncmp(&lines[i][1], ":width:", 7))
-				data->ww = ft_atod(&lines[i][8]);
-			else if (!strncmp(&lines[i][1], ":height:", 8))
-				data->wh = ft_atod(&lines[i][9]);
-		}
+		if (!strncmp(&lines[i][1], ":width:", 7))
+			data->ww = ft_atod(&lines[i][8]);
+		else if (!strncmp(&lines[i][1], ":height:", 8))
+			data->wh = ft_atod(&lines[i][9]);
+		else
+			exit(write(2, "Problem with source file!\n", 26));
 	}
+	if (!data->ww || !data->wh)
+		exit(write(2, "Problem with source file!\n", 26));
 }
 
 void			get_camera_data(char **lines, t_cam *camera)
@@ -52,17 +51,23 @@ void			get_camera_data(char **lines, t_cam *camera)
 	int		i;
 
 	i = -1;
+	camera->origin.x = INFINITY;
+	camera->basis.dir_vect.x = INFINITY;
 	while (lines[++i] && lines[i][0] != '}')
 	{
 		if (!strncmp(&lines[i][1], ":origin:", 8))
-			i = t_dot_create(&camera->origin, i, lines);
+			i = tdc(&camera->origin, i, lines);
 		else if (!strncmp(&lines[i][1], ":direction:", 11))
 		{
-			i = t_dot_create(&camera->basis.dir_vect, i, lines);
+			i = tdc(&camera->basis.dir_vect, i, lines);
 			normalize(&camera->basis.dir_vect);
 			camera->basis = get_basis(camera->basis.dir_vect);
 		}
+		else
+			exit(write(2, "Problem with source file!\n", 26));
 	}
+	if (camera->origin.x == INFINITY || camera->basis.dir_vect.x == INFINITY)
+		exit(write(2, "Problem with source file!\n", 26));
 }
 
 static t_dot	*lights_list_create(t_dot *l, t_dot tmp, t_data *data)
@@ -88,20 +93,16 @@ static t_dot	*lights_list_create(t_dot *l, t_dot tmp, t_data *data)
 	return (new);
 }
 
-t_dot			*get_lights(char **lines, t_dot *l, int i, t_data *data)
+t_dot			*get_lights(char **lines, int i, t_data *data)
 {
 	t_dot	tmp;
+	t_dot	*l;
 
-	data->num_l = 0;
+	l = NULL;
 	while (lines[++i] && lines[i][0] != '}')
 	{
 		if (lines[i][1] == ':')
-		{
-			tmp.x = ft_atod(&lines[i + 1][5]);
-			tmp.y = ft_atod(&lines[i + 2][5]);
-			tmp.z = ft_atod(&lines[i + 3][5]);
-			i += 3;
-		}
+			i = tdc(&tmp, i, lines);
 		l = lights_list_create(l, tmp, data);
 	}
 	return (l);
