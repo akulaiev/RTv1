@@ -13,6 +13,33 @@
 #include "rtv1.h"
 #include <stdio.h>
 
+t_col		get_its_params(t_fig f, t_ray r, t_intersection *i, t_thread *t)
+{
+	i->ray_point = va(r.origin, vm(r.vect, i->t));
+	if (!ft_strcmp(f.name, "sphere"))
+	{
+		i->normal = vd(vmn(i->ray_point, f.centre), f.radius);
+		normalize(&i->normal);
+	}
+	else if (!ft_strcmp(f.name, "cylinder"))
+	{
+		i->normal = vmn(vmn(i->ray_point, f.centre),
+		vm(f.direction, vs(f.direction, vmn(i->ray_point, f.centre))));
+		normalize(&i->normal);
+	}
+	else if (!ft_strcmp(f.name, "cone"))
+	{
+		i->normal = vmn(vmn(i->ray_point, f.centre),
+		vm(f.direction, vs(f.direction, vmn(i->ray_point, f.centre))));
+		normalize(&i->normal);
+		i->normal = va(vm(i->normal,
+		cos(f.angle)), vm(f.direction, sin(f.angle)));
+	}
+	else if (!ft_strcmp(f.name, "plane"))
+		i->normal = f.normal;
+	return (blinn_phong_shading(&f.constant_col, i, t));
+}
+
 static void	shading_help(t_shd *s, t_col *constant_col, t_intersection *its)
 {
 	s->h_vect = va(s->l.vect, s->v_vect);
@@ -50,33 +77,6 @@ static void	integer_to_col(t_shd *s)
 		s->col.struct_col.b = 0xFF;
 	else
 		s->col.struct_col.b = s->tmp_b;
-}
-
-t_col		get_its_params(t_fig f, t_ray r, t_intersection *i, t_thread *t)
-{
-	i->ray_point = va(r.origin, vm(r.vect, i->t));
-	if (!ft_strcmp(f.name, "sphere"))
-	{
-		i->normal = vd(vmn(i->ray_point, f.centre), f.radius);
-		normalize(&i->normal);
-	}
-	else if (!ft_strcmp(f.name, "cylinder"))
-	{
-		i->normal = vmn(vmn(i->ray_point, f.centre),
-		vm(f.direction, vs(f.direction, vmn(i->ray_point, f.centre))));
-		normalize(&i->normal);
-	}
-	else if (!ft_strcmp(f.name, "cone"))
-	{
-		i->normal = vmn(vmn(i->ray_point, f.centre),
-		vm(f.direction, vs(f.direction, vmn(i->ray_point, f.centre))));
-		normalize(&i->normal);
-		i->normal = va(vm(i->normal,
-		cos(f.angle)), vm(f.direction, sin(f.angle)));
-	}
-	else if (!ft_strcmp(f.name, "plane"))
-		i->normal = f.normal;
-	return (blinn_phong_shading(&f.constant_col, i, t));
 }
 
 t_col		blinn_phong_shading(t_col *constant_col,
