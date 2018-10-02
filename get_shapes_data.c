@@ -21,8 +21,8 @@ static int			struct_fig_create_help(char **l, int i, t_fig *f)
 	(i = tdc(&f->normal, i, l)))
 		normalize(&f->normal);
 	else if (l[i][0] == '\t' && !ft_strcmp(&l[i][1], ":direction:") &&
-	(i = tdc(&f->direction, i, l)))
-		normalize(&f->direction);
+	(i = tdc(&f->dir, i, l)))
+		normalize(&f->dir);
 	else if (l[i][0] == '\t' && !ft_strncmp(&l[i][1], ":radius:", 8))
 		f->radius = ft_atod(&l[i][9]);
 	else if (l[i][0] == '\t' && !ft_strncmp(&l[i][1], ":color:", 7))
@@ -32,7 +32,7 @@ static int			struct_fig_create_help(char **l, int i, t_fig *f)
 	else
 	{
 		free(f);
-		exit(write(2, "Problem with source file!\n", 26));
+		exit(write(2, "Bad shapes' parameters names!\n", 30));
 	}
 	return (i);
 }
@@ -49,7 +49,7 @@ static t_fig		*struct_fig_create(char **l, char *name, int i)
 		f->name = name;
 		f->centre.x = INFINITY;
 		f->normal.x = INFINITY;
-		f->direction.x = INFINITY;
+		f->dir.x = INFINITY;
 		while (l[++i] && l[i][0] != '}')
 			i = struct_fig_create_help(l, i, f);
 	}
@@ -57,11 +57,11 @@ static t_fig		*struct_fig_create(char **l, char *name, int i)
 	(!ft_strcmp(name, "cone") && !f->angle) || ((!ft_strcmp(name, "cylinder")
 	|| !ft_strcmp(name, "sphere")) && !f->radius) ||
 	((!ft_strcmp(name, "cylinder") || !ft_strcmp(name, "cone"))
-	&& f->direction.x == INFINITY) ||
+	&& f->dir.x == INFINITY) ||
 	(!ft_strcmp(name, "plane") && f->normal.x == INFINITY))
 	{
 		free(f);
-		exit(write(2, "Problem with source file!\n", 26));
+		exit(write(2, "Bad shapes' parameters!\n", 24));
 	}
 	return (f);
 }
@@ -111,7 +111,7 @@ int (**funct)(t_fig *shape_type, t_ray ray, t_intersection *its))
 	&& (*name = ft_strdup("cone")))
 		*funct = &cone_intersection;
 	else
-		exit(write(2, "Problem with source file!\n", 26));
+		exit(write(2, "Problem with source file: shapes' names!\n", 41));
 }
 
 t_shape				*get_shapes(char **full_file, int num_lines,

@@ -39,8 +39,8 @@ int		cylinder_intersection(t_fig *cy, t_ray ray, t_intersection *its)
 	t_cy	c;
 
 	c.delta_p = vmn(ray.origin, cy->centre);
-	c.tmp = vmn(ray.vect, vm(cy->direction, vs(ray.vect, cy->direction)));
-	c.tmp1 = vmn(c.delta_p, vm(cy->direction, vs(c.delta_p, cy->direction)));
+	c.tmp = vmn(ray.dir_vect, vm(cy->dir, vs(ray.dir_vect, cy->dir)));
+	c.tmp1 = vmn(c.delta_p, vm(cy->dir, vs(c.delta_p, cy->dir)));
 	c.a = vs(c.tmp, c.tmp);
 	c.b = 2 * vs(c.tmp, c.tmp1);
 	c.c = vs(c.tmp1, c.tmp1) - (cy->radius * cy->radius);
@@ -61,16 +61,16 @@ int		cone_intersection(t_fig *co, t_ray ray, t_intersection *its)
 	t_cy	c;
 
 	c.delta_p = vmn(ray.origin, co->centre);
-	c.tmp = vmn(ray.vect, vm(co->direction, vs(ray.vect, co->direction)));
-	c.tmp1 = vmn(c.delta_p, vm(co->direction, vs(c.delta_p, co->direction)));
+	c.tmp = vmn(ray.dir_vect, vm(co->dir, vs(ray.dir_vect, co->dir)));
+	c.tmp1 = vmn(c.delta_p, vm(co->dir, vs(c.delta_p, co->dir)));
 	c.a = pow(cos(co->angle), 2) * vs(c.tmp, c.tmp) -
-	pow(sin(co->angle), 2) * pow(vs(ray.vect, co->direction), 2);
+	pow(sin(co->angle), 2) * pow(vs(ray.dir_vect, co->dir), 2);
 	c.b = 2 * pow(cos(co->angle), 2) * vs(c.tmp, c.tmp1) -
 	2 * pow(sin(co->angle), 2) *
-	vs(ray.vect, co->direction) * vs(c.delta_p, co->direction);
+	vs(ray.dir_vect, co->dir) * vs(c.delta_p, co->dir);
 	c.c = pow(cos(co->angle), 2) * vs(c.tmp1, c.tmp1)
 	- (co->radius * co->radius) -
-	pow(sin(co->angle), 2) * pow(vs(c.delta_p, co->direction), 2);
+	pow(sin(co->angle), 2) * pow(vs(c.delta_p, co->dir), 2);
 	its->d = pow(c.b, 2) - 4 * c.a * c.c;
 	if (its->d < 0 || (c.a == 0 && c.b == 0))
 		return (0);
@@ -89,20 +89,20 @@ int		sphere_intersection(t_fig *sphere, t_ray ray, t_intersection *its)
 	double			p2;
 	t_dot			e_min_c;
 
-	e_min_c = va(ray.origin, vm(sphere->centre, -1));
-	p1 = vs(ray.vect, e_min_c);
+	e_min_c = vmn(ray.origin, sphere->centre);
+	p1 = vs(ray.dir_vect, e_min_c);
 	p1 *= p1;
-	p2 = vs(ray.vect, ray.vect) *
+	p2 = vs(ray.dir_vect, ray.dir_vect) *
 	vs(e_min_c, e_min_c) - (sphere->radius * sphere->radius);
 	its->d = p1 - p2;
 	if (its->d < 0)
 		return (0);
 	else
 	{
-		its->t0 = (vs(vm(ray.vect, -1), e_min_c) + sqrt(its->d))
-		/ vs(ray.vect, ray.vect);
-		its->t1 = (vs(vm(ray.vect, -1), e_min_c) - sqrt(its->d))
-		/ vs(ray.vect, ray.vect);
+		its->t0 = (vs(vm(ray.dir_vect, -1), e_min_c) + sqrt(its->d))
+		/ vs(ray.dir_vect, ray.dir_vect);
+		its->t1 = (vs(vm(ray.dir_vect, -1), e_min_c) - sqrt(its->d))
+		/ vs(ray.dir_vect, ray.dir_vect);
 		if (its->t0 > 0.00001 && its->t1 > 0.00001)
 			its->t = fmin(its->t0, its->t1);
 		else
@@ -116,7 +116,7 @@ int		plane_intersection(t_fig *plane, t_ray ray, t_intersection *its)
 	double			denom;
 	t_dot			diff;
 
-	denom = vs(plane->normal, ray.vect);
+	denom = vs(plane->normal, ray.dir_vect);
 	if (fabs(denom) > 0.00001)
 	{
 		diff = va(plane->centre, vm(ray.origin, -1));

@@ -1,0 +1,214 @@
+{
+	<window>
+	:width: 950;
+	:height: 950;
+}
+
+{
+	<camera>
+	:origin:
+		x = 0;
+		y = 0;
+		z = 10;
+	:direction:
+		x = 0;
+		y = 0;
+		z = 11;
+}
+
+{
+	<lights>
+	:first:
+		x = 75;
+		y = 0;
+		z = -55;
+	:first:
+		x = -75;
+		y = 0;
+		z = -55;
+}
+
+{
+	<plane>
+	:centre:
+		x = 0;
+		y = 25;
+		z = 0;
+	:normal:
+		x = 0;
+		y = -1;
+		z = 0;
+	:color: 0x3f3f3f;
+}
+
+{
+	<plane>
+	:centre:
+		x = 0;
+		y = 0;
+		z = 75;
+	:normal:
+		x = 0;
+		y = 0;
+		z = -5;
+	:color: 0x2a7eed;
+}
+
+{
+	<plane>
+	:centre:
+		x = 0;
+		y = -25;
+		z = 0;
+	:normal:
+		x = 0;
+		y = 1;
+		z = 0;
+	:color: 0xbfbbbb;
+}
+
+{
+	<cylinder>
+	:centre:
+		x = -19;
+		y = 0;
+		z = 39;
+	:direction:
+		x = 0;
+		y = 1;
+		z = 0;
+	:radius: 3;
+	:color: 0x6f6f6f;
+}
+
+{
+	<sphere>
+	:centre:
+		x = -19;
+		y = 25;
+		z = 39;
+	:radius: 5;
+	:color: 0x6f6f6f;
+}
+
+{
+	<sphere>
+	:centre:
+		x = -19;
+		y = -25;
+		z = 39;
+	:radius: 5;
+	:color: 0x6f6f6f;
+}
+
+{
+	<cylinder>
+	:centre:
+		x = 19;
+		y = 0;
+		z = 39;
+	:direction:
+		x = 0;
+		y = 1;
+		z = 0;
+	:radius: 3;
+	:color: 0x6f6f6f;
+}
+
+{
+	<sphere>
+	:centre:
+		x = 19;
+		y = 25;
+		z = 39;
+	:radius: 5;
+	:color: 0x6f6f6f;
+}
+
+{
+	<sphere>
+	:centre:
+		x = 19;
+		y = -25;
+		z = 39;
+	:radius: 5;
+	:color: 0x6f6f6f;
+}
+
+{
+	<cylinder>
+	:centre:
+		x = -19;
+		y = 0;
+		z = 71;
+	:direction:
+		x = 0;
+		y = 1;
+		z = 0;
+	:radius: 3;
+	:color: 0x6f6f6f;
+}
+
+{
+	<sphere>
+	:centre:
+		x = -19;
+		y = 25;
+		z = 71;
+	:radius: 5;
+	:color: 0x6f6f6f;
+}
+
+{
+	<sphere>
+	:centre:
+		x = -19;
+		y = -25;
+		z = 71;
+	:radius: 5;
+	:color: 0x6f6f6f;
+}
+
+{
+	<cylinder>
+	:centre:
+		x = 19;
+		y = 0;
+		z = 71;
+	:direction:
+		x = 0;
+		y = 1;
+		z = 0;
+	:radius: 3;
+	:color: 0x6f6f6f;
+}
+
+{
+	<sphere>
+	:centre:
+		x = 19;
+		y = 25;
+		z = 71;
+	:radius: 5;
+	:color: 0x6f6f6f;
+}
+
+{
+	<sphere>
+	:centre:
+		x = 19;
+		y = -25;
+		z = 71;
+	:radius: 5;
+	:color: 0x6f6f6f;
+}
+
+{
+	<sphere>
+	:centre:
+		x = 0;
+		y = -7;
+		z = 27;
+	:radius: 2;
+	:color: 0xff020f;
+}

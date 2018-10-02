@@ -47,7 +47,7 @@ typedef struct	s_dot
 
 typedef struct	s_ray
 {
-	t_dot			vect;
+	t_dot			dir_vect;
 	t_dot			origin;
 }				t_ray;
 
@@ -58,7 +58,7 @@ typedef	struct	s_fig
 	double			angle;
 	t_dot			normal;
 	t_col			constant_col;
-	t_dot			direction;
+	t_dot			dir;
 	char			*name;
 }				t_fig;
 

@@ -65,7 +65,7 @@ t_dot **l, t_parce rf)
 					return (get_shapes(&rf.f[i - 1], rf.num_lines - i, data));
 			}
 			else
-				exit(write(2, "Problem with source file!\n", 26));
+				exit(write(2, "Bad scene parameters' names!\n", 29));
 		}
 	}
 	return (NULL);
@@ -87,7 +87,7 @@ void			parser(int fd, t_cam *camera, t_data *data)
 	shapes = parser_help(&camera, data, &l, rf);
 	if (!data->num_l || !data->num_shapes || !data->ww || !data->wh ||
 	camera->origin.x == INFINITY || camera->basis.dir_vect.x == INFINITY)
-		exit(write(2, "Problem with source file!\n", 26));
+		exit(write(2, "No shapes, lights or camera data!\n", 34));
 	open_win(data);
 	deal_with_threads(data, *camera, shapes, l);
 	mlx_put_image_to_window(data->mlx_p, data->mlx_nw, data->mlx_img, 0, 0);

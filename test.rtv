@@ -1,0 +1,39 @@
+{
+	<window>
+	:width: 950;
+	:height: 950;
+}
+
+{
+	<camera>
+	:origin:
+		x = 0;
+		y = 0;
+		z = 0;
+	:direction:
+		x = 0;
+		y = 0;
+		z = 5;
+}
+
+{
+	<lights>
+	:first:
+		x = 3;
+		y = 0;
+		z = -1;
+	:second:
+		x = -3;
+		y = 0;
+		z = -1;
+}
+
+{
+	<sphere>
+	:centre:
+		x = 0;
+		y = 0;
+		z = 11;
+	:radius: 3;
+	:color: 0x990a0a;
+}

@@ -16,10 +16,10 @@ void	calculate_ray(t_iter it, t_ray *ray, t_thread *t)
 {
 	it.x_norm = (((it.x + 0.5) / t->win->ww) * 2 - 1) * t->win->ww / t->win->wh;
 	it.y_norm = ((it.y + 0.5) / t->win->wh) * 2 - 1;
-	ray->vect = va(t->camera.basis.dir_vect,
+	ray->dir_vect = va(t->camera.basis.dir_vect,
 	va(vm(t->camera.basis.up_vect, it.y_norm),
 	vm(t->camera.basis.right_vect, it.x_norm)));
-	normalize(&ray->vect);
+	normalize(&ray->dir_vect);
 	ray->origin = t->camera.origin;
 }
 

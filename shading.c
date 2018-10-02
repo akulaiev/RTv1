@@ -15,7 +15,7 @@
 
 t_col		get_its_params(t_fig f, t_ray r, t_intersection *i, t_thread *t)
 {
-	i->ray_point = va(r.origin, vm(r.vect, i->t));
+	i->ray_point = va(r.origin, vm(r.dir_vect, i->t));
 	if (!ft_strcmp(f.name, "sphere"))
 	{
 		i->normal = vd(vmn(i->ray_point, f.centre), f.radius);
@@ -24,16 +24,16 @@ t_col		get_its_params(t_fig f, t_ray r, t_intersection *i, t_thread *t)
 	else if (!ft_strcmp(f.name, "cylinder"))
 	{
 		i->normal = vmn(vmn(i->ray_point, f.centre),
-		vm(f.direction, vs(f.direction, vmn(i->ray_point, f.centre))));
+		vm(f.dir, vs(f.dir, vmn(i->ray_point, f.centre))));
 		normalize(&i->normal);
 	}
 	else if (!ft_strcmp(f.name, "cone"))
 	{
 		i->normal = vmn(vmn(i->ray_point, f.centre),
-		vm(f.direction, vs(f.direction, vmn(i->ray_point, f.centre))));
+		vm(f.dir, vs(f.dir, vmn(i->ray_point, f.centre))));
 		normalize(&i->normal);
 		i->normal = va(vm(i->normal,
-		cos(f.angle)), vm(f.direction, sin(f.angle)));
+		cos(f.angle)), vm(f.dir, sin(f.angle)));
 	}
 	else if (!ft_strcmp(f.name, "plane"))
 		i->normal = f.normal;
@@ -42,9 +42,9 @@ t_col		get_its_params(t_fig f, t_ray r, t_intersection *i, t_thread *t)
 
 static void	shading_help(t_shd *s, t_col *constant_col, t_intersection *its)
 {
-	s->h_vect = va(s->l.vect, s->v_vect);
+	s->h_vect = va(s->l.dir_vect, s->v_vect);
 	normalize(&s->h_vect);
-	s->nl = fmax(0, vs(its->normal, s->l.vect));
+	s->nl = fmax(0, vs(its->normal, s->l.dir_vect));
 	s->hl = fmax(0,
 	pow(vs(its->normal, s->h_vect), 100));
 	s->tmp_r += constant_col->struct_col.r * s->nl + 131 * s->hl;
@@ -90,9 +90,9 @@ t_intersection *its, t_thread *t)
 	init(&s, t, its);
 	while (++s.i < t->win->num_l)
 	{
-		s.l.vect = vmn(t->lights[s.i], s.l.origin);
-		s.light_len = sqrt(vs(s.l.vect, s.l.vect));
-		s.l.vect = vd(s.l.vect, s.light_len);
+		s.l.dir_vect = vmn(t->lights[s.i], s.l.origin);
+		s.light_len = sqrt(vs(s.l.dir_vect, s.l.dir_vect));
+		s.l.dir_vect = vd(s.l.dir_vect, s.light_len);
 		s.j = 0;
 		while (s.j < t->win->num_shapes)
 		{

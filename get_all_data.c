@@ -18,7 +18,7 @@ int				tdc(t_dot *vect, int i, char **lines)
 	if ((!ft_isdigit(lines[i + 1][6]) && lines[i + 1][6] != '-') ||
 	(lines[i + 1][2] != 'x' || lines[i + 2][2] != 'y' ||
 	lines[i + 3][2] != 'z'))
-		exit(write(2, "Problem with source file!\n", 26));
+		exit(write(2, "Problem with source file: bad coordinates!\n", 43));
 	vect->x = ft_atod(&lines[i + 1][5]);
 	vect->y = ft_atod(&lines[i + 2][5]);
 	vect->z = ft_atod(&lines[i + 3][5]);
@@ -40,10 +40,10 @@ void			get_win_data(char **lines, t_data *data)
 		else if (!strncmp(&lines[i][1], ":height:", 8) && lines[i][0] == '\t')
 			data->wh = ft_atod(&lines[i][9]);
 		else
-			exit(write(2, "Problem with source file!\n", 26));
+			exit(write(2, "Problem with source file: reading!\n", 35));
 	}
 	if (!data->ww || !data->wh)
-		exit(write(2, "Problem with source file!\n", 26));
+		exit(write(2, "Problem with source file: no window params!\n", 44));
 }
 
 void			get_camera_data(char **lines, t_cam *camera)
@@ -65,10 +65,10 @@ void			get_camera_data(char **lines, t_cam *camera)
 			camera->basis = get_basis(camera->basis.dir_vect);
 		}
 		else
-			exit(write(2, "Problem with source file!\n", 26));
+			exit(write(2, "Bad camera params!\n", 19));
 	}
 	if (camera->origin.x == INFINITY || camera->basis.dir_vect.x == INFINITY)
-		exit(write(2, "Problem with source file!\n", 26));
+		exit(write(2, "Bad camera params!\n", 19));
 }
 
 static t_dot	*lights_list_create(t_dot *l, t_dot tmp, t_data *data)
