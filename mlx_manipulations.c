@@ -12,12 +12,18 @@
 
 #include "rtv1.h"
 
+static int	exit_x(void)
+{
+	system("leaks RTv1");
+	exit(0);
+}
+
 int			key_react(int keycode, void *param)
 {
 	param = NULL;
 	if (keycode == 53)
 	{
-		// system("leaks RTv1");
+		system("leaks RTv1");
 		exit(0);
 	}
 	return (0);
@@ -31,6 +37,7 @@ void		open_win(t_data *win)
 	win->img_ptr = mlx_get_data_addr(win->mlx_img,
 	&win->bits_per_pixel, &win->size_line, &win->endian);
 	mlx_hook(win->mlx_nw, 2, 5, key_react, (void*)win);
+	mlx_hook(win->mlx_nw, 17, 1L << 17, exit_x, (void*)win);
 }
 
 void		deal_with_threads(t_data *win, t_cam camera,
