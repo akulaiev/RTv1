@@ -16,7 +16,11 @@ CC = gcc
 CFLAGS = -Wall -Werror -Wextra
 
 LIBFT = ./libft/libft.a
+
 LIBFT_PATH = ./libft/
+SRC_PATH = ./src/
+INC_PATH = ./inc/
+SCENES_PATH = ./obj/
 
 MLX = ./minilibx_macos/libmlx.a
 MLX_PATH = ./minilibx_macos/
@@ -25,9 +29,9 @@ SOURCE = main.c vector_operations.c vector_manipulate.c mlx_manipulations.c \
 shapes.c parser.c get_all_data.c get_shapes_data.c ft_atod.c create_rays.c \
 shading.c
 
-O_FILES = $(SOURCE:.c=.o)
+SRCS = $(addprefix $(SRC_PATH), $(SOURCE))
 
-HEADER = -I ./RTv1.h
+O_FILES = $(SRCS:.c=.o)
 
 all: LIBS $(NAME) 
 
@@ -39,7 +43,7 @@ LIBS:
 	make -C $(LIBFT_PATH)
 
 %.o: %.c
-	$(CC) $(HEADER) $(CFLAGS) $(SOURCE) -c $<
+	$(CC) -I$(INC_PATH) $(CFLAGS) $(SRCS) -c $<
 
 exe:
 	./$(NAME) full_scene.rtv
