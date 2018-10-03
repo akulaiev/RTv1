@@ -19,19 +19,19 @@ LIBFT = ./libft/libft.a
 
 LIBFT_PATH = ./libft/
 SRC_PATH = ./src/
-INC_PATH = ./inc/
-SCENES_PATH = ./obj/
+INC_PATH = ./inc/rtv1.h
+OBJ_DIR = ./obj/
 
 MLX = ./minilibx_macos/libmlx.a
 MLX_PATH = ./minilibx_macos/
 
-SOURCE = main.c vector_operations.c vector_manipulate.c mlx_manipulations.c \
-shapes.c parser.c get_all_data.c get_shapes_data.c ft_atod.c create_rays.c \
-shading.c
+vpath %.c $(SRC_PATH)
 
-SRCS = $(addprefix $(SRC_PATH), $(SOURCE))
+SOURCE = main.c .vector_operations.c vector_manipulate.c \
+mlx_manipulations.c shapes.c parser.c get_all_data.c \
+get_shapes_data.c ft_atod.c create_rays.c shading.c
 
-O_FILES = $(SRCS:.c=.o)
+O_FILES = $(SOURCE:.c=.o)
 
 all: LIBS $(NAME) 
 
@@ -42,11 +42,11 @@ LIBS:
 	make -C $(MLX_PATH)
 	make -C $(LIBFT_PATH)
 
-%.o: %.c
-	$(CC) -I$(INC_PATH) $(CFLAGS) $(SRCS) -c $<
+$(OBJ_DIR)/%.o: %.c
+	$(CC) $(CFLAGS) $(SOURCE) -c -I$(INC_PATH)$<
 
 exe:
-	./$(NAME) full_scene.rtv
+	./$(NAME) ./scenes/full_scene.rtv
 
 clean:
 	make -C $(LIBFT_PATH) clean
