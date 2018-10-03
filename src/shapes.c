@@ -119,7 +119,7 @@ int		plane_intersection(t_fig *plane, t_ray ray, t_intersection *its)
 	denom = vs(plane->normal, ray.dir_vect);
 	if (fabs(denom) > 0.00001)
 	{
-		diff = va(plane->centre, vm(ray.origin, -1));
+		diff = vmn(plane->centre, ray.origin);
 		its->t = vs(diff, plane->normal) / denom;
 		if (its->t > 0.00001)
 			return (1);

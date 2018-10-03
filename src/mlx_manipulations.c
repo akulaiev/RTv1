@@ -14,7 +14,7 @@
 
 static int	exit_x(void)
 {
-	system("leaks RTv1");
+	// system("leaks RTv1");
 	exit(0);
 }
 
@@ -23,7 +23,7 @@ int			key_react(int keycode, void *param)
 	param = NULL;
 	if (keycode == 53)
 	{
-		system("leaks RTv1");
+		// system("leaks RTv1");
 		exit(0);
 	}
 	return (0);

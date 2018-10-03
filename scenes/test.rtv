@@ -13,27 +13,47 @@
 	:direction:
 		x = 0;
 		y = 0;
-		z = 5;
+		z = 1;
 }
 
 {
 	<lights>
 	:first:
-		x = 3;
-		y = 0;
-		z = -1;
-	:second:
 		x = -3;
-		y = 0;
-		z = -1;
-}
-
-{
-	<sphere>
-	:centre:
+		y = 1;
+		z = 7;
+	:second:
 		x = 0;
 		y = 0;
-		z = 11;
-	:radius: 3;
-	:color: 0x990a0a;
+		z = 0;
+}
+
+
+{
+	<cylinder>
+	:centre:
+		x = 0;
+		y = 1;
+		z = 7;
+	:direction:
+		x = 5;
+		y = 5;
+		z = 0;
+	:radius: 1.5;
+	:color: 0x4161f4;
+}
+
+
+{
+	<cone>
+	:centre:
+		x = 5;
+		y = 1;
+		z = 1;
+	:direction:
+		x = -5;
+		y = 1;
+		z = -9;
+	:angle: 0.25;
+	:color: 0xf441a6;
 }

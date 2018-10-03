@@ -46,7 +46,7 @@ LIBS:
 	$(CC) $(CFLAGS) -I $(INC_PATH) -c $< -o $@
 
 exe:
-	./$(NAME) ./scenes/full_scene.rtv
+	./$(NAME) scenes/full_scene.rtv
 
 clean:
 	make -C $(LIBFT_PATH) clean
