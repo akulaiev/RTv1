@@ -20,7 +20,6 @@ LIBFT = ./libft/libft.a
 LIBFT_PATH = ./libft/
 SRC_PATH = ./src/
 INC_PATH = ./inc
-OBJ_DIR = ./obj/
 
 MLX = ./minilibx_macos/libmlx.a
 MLX_PATH = ./minilibx_macos/
