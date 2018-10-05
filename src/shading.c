@@ -13,7 +13,7 @@
 #include "rtv1.h"
 #include <stdio.h>
 
-t_col		get_its_params(t_fig f, t_ray r, t_intersection *i, t_thread *t)
+t_col			get_its_params(t_fig f, t_ray r, t_intersection *i, t_thread *t)
 {
 	i->ray_point = va(r.origin, vm(r.dir_vect, i->t));
 	if (!ft_strcmp(f.name, "sphere"))
@@ -40,7 +40,7 @@ t_col		get_its_params(t_fig f, t_ray r, t_intersection *i, t_thread *t)
 	return (blinn_phong_shading(&f.constant_col, i, t));
 }
 
-static void	shading_help(t_shd *s, t_col *constant_col, t_intersection *its)
+static void		shading_help(t_shd *s, t_col *constant_col, t_intersection *its)
 {
 	s->h_vect = va(s->l.dir_vect, s->v_vect);
 	normalize(&s->h_vect);
@@ -52,18 +52,35 @@ static void	shading_help(t_shd *s, t_col *constant_col, t_intersection *its)
 	s->tmp_b += constant_col->struct_col.b * s->nl + 131 * s->hl;
 }
 
-static void	init(t_shd *s, t_thread *t, t_intersection *its)
+static float	init(t_shd *s, t_thread *t, t_intersection *its, float test)
 {
-	s->v_vect = vmn(t->camera.origin, its->ray_point);
-	normalize(&s->v_vect);
-	s->tmp_r = 0;
-	s->tmp_g = 0;
-	s->tmp_b = 0;
-	s->i = -1;
-	s->l.origin = its->ray_point;
+	t_shape	*shape;
+	t_fig	plane;
+
+	shape = t->shapes;
+	if (!test)
+	{
+		s->v_vect = vmn(t->camera.origin, its->ray_point);
+		normalize(&s->v_vect);
+		s->tmp_r = 0;
+		s->tmp_g = 0;
+		s->tmp_b = 0;
+		s->i = -1;
+		s->l.origin = its->ray_point;
+	}
+	if (test == 1)
+	{
+		if (!ft_strcmp(((t_fig*)shape[s->j].data)->name, "plane"))
+		{
+			plane = *((t_fig*)shape[s->j].data);
+			test = vs(vmn(t->lights[s->i], plane.centre), plane.normal);
+		}
+		return (test);
+	}
+	return (0);
 }
 
-static void	integer_to_col(t_shd *s)
+static void		integer_to_col(t_shd *s)
 {
 	if (s->tmp_r > 0xFF)
 		s->col.struct_col.r = 0xFF;
@@ -79,7 +96,7 @@ static void	integer_to_col(t_shd *s)
 		s->col.struct_col.b = s->tmp_b;
 }
 
-t_col		blinn_phong_shading(t_col *constant_col,
+t_col			blinn_phong_shading(t_col *constant_col,
 t_intersection *its, t_thread *t)
 {
 	t_shd			s;
@@ -87,17 +104,17 @@ t_intersection *its, t_thread *t)
 	t_shape			*shape;
 
 	shape = t->shapes;
-	init(&s, t, its);
+	init(&s, t, its, 0);
 	while (++s.i < t->win->num_l)
 	{
 		s.l.dir_vect = vmn(t->lights[s.i], s.l.origin);
 		s.light_len = sqrt(vs(s.l.dir_vect, s.l.dir_vect));
 		s.l.dir_vect = vd(s.l.dir_vect, s.light_len);
 		s.j = 0;
-		while (s.j < t->win->num_shapes)
+		while (s.j < t->win->num_shapes && (its1.closest_t = -INFINITY))
 		{
-			if (!shape[s.j].f(shape[s.j].data, s.l, &its1) ||
-			s.light_len < its1.t || its1.t < 0.00001)
+			if ((!shape[s.j].f(shape[s.j].data, s.l, &its1) ||
+			s.light_len < its1.t || its1.t < 0.00001) && init(&s, t, its, 1))
 				s.j++;
 			else
 				break ;

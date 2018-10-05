@@ -60,6 +60,7 @@ typedef	struct	s_fig
 	t_col			constant_col;
 	t_dot			dir;
 	char			*name;
+	t_dot			rp;
 }				t_fig;
 
 typedef struct	s_intersection

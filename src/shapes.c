@@ -122,7 +122,15 @@ int		plane_intersection(t_fig *plane, t_ray ray, t_intersection *its)
 		diff = vmn(plane->centre, ray.origin);
 		its->t = vs(diff, plane->normal) / denom;
 		if (its->t > 0.00001)
+		{
+			if (denom >= 0 && its->closest_t != -INFINITY)
+			{
+				plane->normal.x *= -1;
+				plane->normal.y *= -1;
+				plane->normal.z *= -1;
+			}
 			return (1);
+		}
 	}
 	return (0);
 }

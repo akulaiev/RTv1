@@ -1,6 +1,6 @@
 {
 	<window>
-	:width: 950;
+	:width: 1150;
 	:height: 950;
 }
 
@@ -19,20 +19,32 @@
 {
 	<lights>
 	:first:
-		x = -3;
-		y = 1;
-		z = 7;
+		x = -9;
+		y = 0.5;
+		z = -3;
 	:second:
-		x = 0;
-		y = 0;
-		z = 0;
+		x = 9;
+		y = 0.5;
+		z = -3;
 }
 
+{
+	<plane>
+	:centre:
+		x = 0;
+		y = 0;
+		z = 15;
+	:normal:
+		x = 0;
+		y = 0;
+		z = -15;
+	:color: 0x56f7cc;
+}
 
 {
 	<cylinder>
 	:centre:
-		x = 0;
+		x = 1.5;
 		y = 1;
 		z = 7;
 	:direction:
@@ -40,20 +52,19 @@
 		y = 5;
 		z = 0;
 	:radius: 1.5;
-	:color: 0x4161f4;
+	:color: 0x4ef70c;
 }
 
-
 {
-	<cone>
+	<cylinder>
 	:centre:
-		x = 5;
+		x = 1.5;
 		y = 1;
-		z = 1;
+		z = 7;
 	:direction:
 		x = -5;
-		y = 1;
-		z = -9;
-	:angle: 0.25;
-	:color: 0xf441a6;
+		y = 5;
+		z = 0;
+	:radius: 1.5;
+	:color: 0xf7f30c;
 }
