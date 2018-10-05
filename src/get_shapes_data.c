@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "rtv1.h"
-#include <stdio.h>
 
 static int			struct_fig_create_help(char **l, int i, t_fig *f)
 {

@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "rtv1.h"
-#include <stdio.h>
 
 t_col			get_its_params(t_fig f, t_ray r, t_intersection *i, t_thread *t)
 {

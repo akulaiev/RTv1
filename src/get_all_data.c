@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "rtv1.h"
-#include <stdio.h>
 
 int				tdc(t_dot *vect, int i, char **lines)
 {

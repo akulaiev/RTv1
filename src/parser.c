@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "rtv1.h"
-#include <stdio.h>
 
 static char		**ft_realloc_2d(char **lines, int num_lines)
 {

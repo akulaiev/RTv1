@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "rtv1.h"
-#include <stdio.h>
 
 int		get_closest_shape(t_thread *t, t_ray ray, t_intersection *its)
 {
