@@ -14,6 +14,8 @@
 
 t_col			get_its_params(t_fig f, t_ray r, t_intersection *i, t_thread *t)
 {
+	t_dot tmp;
+
 	i->ray_point = va(r.origin, vm(r.dir_vect, i->t));
 	if (!ft_strcmp(f.name, "sphere"))
 	{
@@ -28,11 +30,11 @@ t_col			get_its_params(t_fig f, t_ray r, t_intersection *i, t_thread *t)
 	}
 	else if (!ft_strcmp(f.name, "cone"))
 	{
-		i->normal = vmn(vmn(i->ray_point, f.centre),
-		vm(f.dir, vs(f.dir, vmn(i->ray_point, f.centre))));
+		tmp = vmn(i->ray_point, f.centre);
+		tmp = va(f.centre, vm(f.dir, vs(f.dir, tmp)));
+		i->normal = vmn(i->ray_point, tmp);
 		normalize(&i->normal);
-		i->normal = va(vm(i->normal,
-		cos(f.angle)), vm(f.dir, sin(f.angle)));
+
 	}
 	else if (!ft_strcmp(f.name, "plane"))
 		i->normal = f.normal;
