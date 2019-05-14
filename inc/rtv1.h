@@ -17,7 +17,7 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <math.h>
-# include "../minilibx_macos/mlx.h"
+# include "../Minilibx/mlx.h"
 # include "../libft/libft.h"
 # include <string.h>
 # include <pthread.h>

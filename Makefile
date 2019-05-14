@@ -21,8 +21,7 @@ LIBFT_PATH = ./libft/
 SRC_PATH = ./src/
 INC_PATH = ./inc
 
-MLX = ./minilibx_macos/libmlx.a
-MLX_PATH = ./minilibx_macos/
+MLX = ./Minilibx/libmlx.a
 
 vpath %.c $(SRC_PATH)
 
@@ -38,7 +37,6 @@ $(NAME): $(O_FILES)
 	$(CC) $(MLX) -framework OpenGL -framework AppKit $(CFLAGS) -o $(NAME) $(O_FILES) $(LIBFT)
 
 LIBS:
-	make -C $(MLX_PATH)
 	make -C $(LIBFT_PATH)
 
 %.o: %.c $(INC_PATH)/rtv1.h

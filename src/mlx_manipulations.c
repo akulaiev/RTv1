@@ -28,7 +28,7 @@ int			key_react(int keycode, void *param)
 void		open_win(t_data *win)
 {
 	win->mlx_p = mlx_init();
-	win->mlx_nw = mlx_new_window(win->mlx_p, win->ww, win->wh, "Test");
+	win->mlx_nw = mlx_new_window(win->mlx_p, win->ww, win->wh, "RTv1");
 	win->mlx_img = mlx_new_image(win->mlx_p, win->ww, win->wh);
 	win->img_ptr = mlx_get_data_addr(win->mlx_img,
 	&win->bits_per_pixel, &win->size_line, &win->endian);
